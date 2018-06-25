@@ -19,21 +19,26 @@ private:
   TLorentzVector b_nonbJet1, b_nonbJet2 ,b_nonbJet3 ,b_nonbJet4;
 
   std::vector<TLorentzVector> b_Mu_tlv, b_El_tlv, b_Jet_tlv, b_bJet_tlv, b_nonbJet_tlv;
-  
+  std::vector<TLorentzVector> *b_bJet = 0;
+  std::vector<TLorentzVector> *b_nonbJet = 0;
+  std::vector<TLorentzVector> *b_Jet = 0;
   std::vector<Float_t> b_CSVv2;
   std::vector<Float_t> b_csvweights;
   std::vector<Int_t> b_Jet_pu;
-  std::vector<Float_t> b_Jet_pT;
-  std::vector<Float_t> b_Jet_Eta;
-  std::vector<Float_t> b_Jet_Phi;
-  std::vector<Float_t> b_nonbJet_pT;
-  std::vector<Float_t> b_nonbJet_Eta;
-  std::vector<Float_t> b_nonbJet_Phi;
   
   Float_t b_genweight, b_weight;
   Float_t b_puweight, b_puweight_up, b_puweight_dn; 
   Float_t b_mueffweight, b_mueffweight_up, b_mueffweight_dn;
   Float_t b_btagweight, b_btagweight_up, b_btagweight_dn;
+  Float_t b_btagweightB, btagweightC, btagweightL;
+  Float_t b_jes_up, b_jes_dn, b_lf_up, b_lf_dn, b_hfstats1_up, b_hfstats1_dn, b_hfstats2_up, b_hfstats2_dn; 
+  Float_t b_cferr1_up, b_cferr1_dn, b_cferr2_up, b_cferr2_dn, b_lfstats1_up, b_lfstats1_dn, b_lfstats2_up, b_lfstats2_dn, b_hf_up, b_hf_dn;
+  
+  std::map<std::string, Float_t*> sys_b;
+  std::map<std::string, Float_t*> sys_c;
+  std::map<std::string, Float_t*> sys_l;
+
+  Float_t b_Jet_eta1, b_Jet_eta2, b_Jet_eta3, b_Jet_eta4; 
 
   Int_t b_Event_No, b_Event_Total;
   // BDT Variables
@@ -104,6 +109,29 @@ h2muAnalyser::h2muAnalyser(TTree *tree, Bool_t isMC) : nanoBase(tree, isMC)
 {
   std::string env = getenv("CMSSW_BASE");
   m_rocCor = new RoccoR(env+"/src/nano/analysis/data/rcdata.2016.v3/");
+  
+  sys_b["up_jes"] = &b_jes_up; 
+  sys_b["down_jes"] = &b_jes_dn; 
+  sys_b["up_lf"] = &b_lf_up;
+  sys_b["down_lf"] = &b_lf_dn;
+  sys_b["up_hfstats1"] = &b_hfstats1_up;
+  sys_b["down_hfstats1"] = &b_hfstats1_dn;
+  sys_b["up_hfstats2"] = &b_hfstats2_up;
+  sys_b["down_hfstats2"] = &b_hfstats2_dn;
+  
+  sys_l["up_jes"] = &b_jes_up; 
+  sys_l["down_jes"] = &b_jes_dn; 
+  sys_l["up_lfstats1"] = &b_lfstats1_up;
+  sys_l["down_lfstats1"] = &b_lfstats1_dn;
+  sys_l["up_lfstats2"] = &b_lfstats2_up;
+  sys_l["down_lfstats2"] = &b_lfstats2_dn;
+  sys_l["up_hf"] = &b_hf_up;
+  sys_l["down_hf"] = &b_hf_dn;
+  
+  sys_c["up_cferr1"] = &b_cferr1_up;
+  sys_c["down_cferr1"] = &b_cferr1_dn;
+  sys_c["up_cferr2"] = &b_cferr2_up;
+  sys_c["down_cferr2"] = &b_cferr2_dn;
 }
 
 h2muAnalyser::~h2muAnalyser()

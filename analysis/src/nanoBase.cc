@@ -24,11 +24,25 @@ nanoBase::nanoBase(TTree *tree, TTree *had, TTree *hadTruth, Bool_t isMC) :
      exit(50);
   }
   m_lumi = new lumiTool(lumi);
-  string csvFileName = "CSVv2_Moriond17_B_H.csv";
-  std::string csvFile = env+"/src/nano/analysis/data/btagSF/"+csvFileName;
-  BTagCalibration calib("csvv2", csvFile);
-  m_btagSF = BTagCalibrationReader(BTagEntry::OP_MEDIUM,"central",{"up","down"});
-  m_btagSF.load(calib, BTagEntry::FLAV_B, "mujets");
+
+  string measType = "iterativefit";
+  string csvFile = "CSVv2_Moriond17_B_H.csv";
+  std::string inputCSV = env+"/src/nano/analysis/data/btagSF/"+csvFile;   
+  sys = {"up_jes","down_jes","up_lf","down_lf","up_hfstats1","down_hfstats1","up_hfstats2","down_hfstats2", "up_cferr1", "down_cferr1", 
+         "up_cferr2", "down_cferr2", "up_lfstats1", "down_lfstats1", "up_lfstats2", "down_lfstats2", "up_hf", "down_hf"};
+
+  sysb = {"up_jes","down_jes","up_lf","down_lf","up_hfstats1","down_hfstats1","up_hfstats2","down_hfstats2"};
+  sysc = {"up_cferr1", "down_cferr1", "up_cferr2"};
+  sysl = {"up_jes", "down_jes", "up_lfstats1", "down_lfstats1", "up_lfstats2", "down_lfstats2", "up_hf", "down_hf"};
+
+  BTagCalibration calib("csvv2", inputCSV);
+  reader = BTagCalibrationReader(BTagEntry::OP_RESHAPING,"central", sys);
+
+  reader.load(calib, BTagEntry::FLAV_B, measType);
+  reader.load(calib, BTagEntry::FLAV_C, measType);
+  reader.load(calib, BTagEntry::FLAV_UDSG, measType);
+
+  std::cout << "\tInput CSV weight files = " << csvFile << "; measurementType = " << measType << std::endl; 
 }
 
 nanoBase::~nanoBase()

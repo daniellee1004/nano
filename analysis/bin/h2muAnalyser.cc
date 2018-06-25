@@ -116,6 +116,7 @@ void h2muAnalyser::SetOutput(string outputName)
   h_Non = new TH1D("Non", "Non", 1, 0, 1);
 
 }
+
 void h2muAnalyser::MakeBranch(TTree* t)
 {
   t->Branch("Event_No", &b_Event_No, "Event_No/I");
@@ -125,15 +126,17 @@ void h2muAnalyser::MakeBranch(TTree* t)
   
   t->Branch("Mu2", "TLorentzVector", &b_Mu2);
   t->Branch("lep", "TLorentzVector", &b_lep);
+  t->Bronch("bjet", "std::vector<TLorentzVector>", &b_bJet);
   
   t->Branch("Jet_pu", "std::vector<int>", &b_Jet_pu);
-  t->Branch("Jet_pt", "std::vector<float>", &b_Jet_pT);
-  t->Branch("Jet_eta", "std::vector<float>", &b_Jet_Eta);
-  t->Branch("Jet_phi", "std::vector<float>", &b_Jet_Phi);
-  t->Branch("nonbJet_pt", "std::vector<float>", &b_nonbJet_pT);
+  t->Bronch("Jet", "std::vector<TLorentzVector>", &b_Jet);
+  t->Bronch("nonbJet", "std::vector<TLorentzVector>", &b_nonbJet);
  
-  t->Branch("nonbJet_eta", "std::vector<float>", &b_nonbJet_Eta);
-  t->Branch("nonbJet_phi", "std::vector<float>", &b_nonbJet_Phi);
+  t->Branch("Jet_eta1", &b_Jet_eta1, "Jet_eta1/F");
+  t->Branch("Jet_eta2", &b_Jet_eta2, "Jet_eta2/F");
+  t->Branch("Jet_eta3", &b_Jet_eta3, "Jet_eta3/F");
+  t->Branch("Jet_eta4", &b_Jet_eta4, "Jet_eta4/F");
+  
   t->Branch("genweight", &b_genweight, "genweight/F");
   t->Branch("puweight", &b_puweight, "puweight/F");
   
@@ -163,11 +166,18 @@ void h2muAnalyser::MakeBranch(TTree* t)
   t->Branch("nonB", &b_nonB, "nonB/I");
   
   t->Branch("csvweight", "std::vector<float>", &b_csvweights);
-//  t->Branch("btagweight", &b_btagweight, "btagweight/F");
-//  t->Branch("btagweight_up", &b_btagweight_up, "btagweight_up/F");
-//  t->Branch("btagweight_dn", &b_btagweight_dn, "btagweight_dn/F");
+  t->Branch("btagweight", &b_btagweight, "btagweight/F");
+  t->Branch("btagweightB", &b_btagweightB, "btagweightB/F");
   
-  /*t->Branch("jes_up", &b_jes_up, "jes_up/F");
+  t->Branch("btagweightMu", &b_btagweightMu, "btagweightMu/F");
+  t->Branch("btagweightMu_up", &b_btagweightMu_up, "btagweightMu_up/F");
+  t->Branch("btagweightMu_dn", &b_btagweightMu_dn, "btagweightMu_dn/F");
+ 
+  t->Branch("btagweightComb", &b_btagweightComb, "btagweightComb/F");
+  t->Branch("btagweightComb_up", &b_btagweightComb_up, "btagweightComb_up/F");
+  t->Branch("btagweightComb_dn", &b_btagweightComb_dn, "btagweightComb_dn/F");
+  
+  t->Branch("jes_up", &b_jes_up, "jes_up/F");
   t->Branch("jes_dn", &b_jes_dn, "jes_dn/F");
   t->Branch("cferr1_up", &b_cferr1_up, "cferr1_up/F");
   t->Branch("cferr1_dn", &b_cferr1_dn, "cferr1_dn/F");
@@ -188,7 +198,7 @@ void h2muAnalyser::MakeBranch(TTree* t)
   t->Branch("lfstats1_dn", &b_lfstats1_dn, "lfstats1_dn/F");
   
   t->Branch("lfstats2_up", &b_lfstats2_up, "lfstats2_up/F");
-  t->Branch("lfstats2_dn", &b_lfstats2_dn, "lfstats2_dn/F");*/
+  t->Branch("lfstats2_dn", &b_lfstats2_dn, "lfstats2_dn/F");
   t->Branch("mueffweight", &b_mueffweight, "mueffweight/F");
   t->Branch("mueffweight_up", &b_mueffweight_up, "mueffweight_up/F");
   t->Branch("mueffweight_dn", &b_mueffweight_dn, "mueffweight_dn/F");
@@ -238,8 +248,7 @@ void h2muAnalyser::MakeBranch(TTree* t)
 }
 
 void h2muAnalyser::ResetBranch()
-{  
-  b_Event_No = 0;
+{ 
   b_Step = 0;
   b_Dilep.SetPtEtaPhiM(0,0,0,0);
   b_Mu1.SetPtEtaPhiM(0,0,0,0);
@@ -250,18 +259,21 @@ void h2muAnalyser::ResetBranch()
   b_nonbJet3.SetPtEtaPhiM(0,0,0,0);
   b_nonbJet4.SetPtEtaPhiM(0,0,0,0);
 
-  b_Mu_tlv.clear();
-  b_El_tlv.clear();
-  b_Jet_tlv.clear();
-  b_bJet_tlv.clear();
-  b_nonbJet_tlv.clear(); b_Jet_pT.clear(); b_Jet_Eta.clear(); b_Jet_pu.clear();
-  b_Jet_pT.clear(); b_Jet_Eta.clear(); b_Jet_Phi.clear();
-  b_nonbJet_pT.clear(); b_nonbJet_Eta.clear(); b_nonbJet_Phi.clear();
+  b_Mu_tlv.clear(); b_El_tlv.clear(); b_Jet_tlv.clear(); b_bJet_tlv.clear();
+  b_bJet->clear(); b_Jet->clear(); b_nonbJet->clear(); 
+  b_nonbJet_tlv.clear(); b_Jet_pu.clear();
   b_csvweights.clear(); b_CSVv2.clear();
-  b_Event_Total = 1;
-  b_channel = -1;
+  b_Event_Total = 1; b_channel = -1;
   b_nlep = 0; b_nmuon = 0; b_nelec = 0; b_nnonbjet = 0; b_njet = 0; b_nbjet = 0;
   b_XL = 0; b_nFH4 = 0; b_Out = 0; b_nonB = 0; 
+  b_Jet_eta1 = -6.; b_Jet_eta2 = -6.; b_Jet_eta3 = -6.; b_Jet_eta4 = -6.;
+  
+  // BtagWeight //
+  b_btagweightB = 1.;
+  b_btagweight = 1.; b_jes_up = 1.; b_jes_dn = 1.; b_lf_up = 1.; b_lf_dn = 1.;
+  b_hfstats1_up = 1.; b_hfstats1_dn = 1.; b_hfstats2_up = 1.; b_hfstats2_dn = 1.;
+  b_lfstats1_up = 1.; b_lfstats1_dn = 1.; b_lfstats2_up = 1.; b_lfstats2_dn = 1.; 
+  b_hf_up = 1.; b_hf_dn = 1.; b_cferr1_up = 1.; b_cferr1_dn = 1.; b_cferr2_up = 1.; b_cferr2_dn = 1.;
   // BDT //
   b_all_muEtaDiff = 0; b_all_muPtDiff = 0; b_all_muPhiDiff = 0; b_all_muDR = 0;
   b_all_Dilep_Pt = 0; b_all_Dilep_Eta = 0; b_all_Dilep_Phi = 0;
@@ -281,7 +293,6 @@ bool h2muAnalyser::Analysis()
   h_Event_Tot->Fill(0.5, b_Event_Total);
   h_cutFlow->Fill(0);
   b_Step = 0;
-  
   //Run for MC
   if(m_isMC){
     Int_t nvtx = Pileup_nTrueInt;
@@ -368,14 +379,20 @@ bool h2muAnalyser::Analysis()
   b_npvs = PV_npvs;
 
   for (UInt_t i = 0; i < Jets.size(); i++) {
-     b_Jet_pT.push_back(b_Jet_tlv[i].Pt());
-     b_Jet_Eta.push_back(b_Jet_tlv[i].Eta());
-     b_Jet_Phi.push_back(b_Jet_tlv[i].Phi());
+     if (i == 0) {
+        b_Jet_eta1 = b_Jet_tlv[i].Eta();
+        }
+     if (i == 1) {
+        b_Jet_eta2 = b_Jet_tlv[i].Eta();
+        }
+     if (i == 2) {
+        b_Jet_eta3 = b_Jet_tlv[i].Eta();
+        }
+     if (i == 3) {
+        b_Jet_eta4 = b_Jet_tlv[i].Eta();
+        }
   }
   for (UInt_t i = 0; i < nonbJets.size(); i++) {
-     b_nonbJet_pT.push_back(b_nonbJet_tlv[i].Pt());
-     b_nonbJet_Eta.push_back(b_nonbJet_tlv[i].Eta());
-     b_nonbJet_Phi.push_back(b_nonbJet_tlv[i].Phi());
   } 
 
   b_Dilep = b_Mu1 + b_Mu2;
@@ -431,7 +448,7 @@ bool h2muAnalyser::Analysis()
        if (Muons.size() > 2) {
          for (UInt_t n = 1; n < Muons.size(); n++) {
            if (Muons[n].Pt() != b_Mu2.Pt()) {
-             DR_Hold = b_bJet_tlv[i].DeltaR(b_Mu_tlv[n]);
+             DR_Hold =b_bJet_tlv[i].DeltaR(b_Mu_tlv[n]);
              if (DR_Hold < b_minDR || b_minDR < 0) {
                b_minDR = DR_Hold;
              } 
@@ -460,7 +477,7 @@ bool h2muAnalyser::Analysis()
      
      for (UInt_t i = 0; i < BJets.size(); i++) {
        DR_Hold = b_bJet_tlv[i].DeltaR(b_Mu1);
-       DR_Hold2 = b_bJet_tlv[i].DeltaR(b_Mu2);
+       DR_Hold2 =b_bJet_tlv[i].DeltaR(b_Mu2);
        if (DR_Hold < b_minDR1 || b_minDR1 < 0) {
          b_minDR1 = DR_Hold;
        }
@@ -600,13 +617,14 @@ int main(Int_t argc, Char_t** argv)
       t.Loop();
     }
   } else {
-  //  TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v4/ttHToMuMu_M125_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6/180509_131219/0000/nanoAOD_112.root", "read");
+    TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v5/ttHToMuMu_M125_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6/180611_131219/0000/nanoAOD_112.root", "read");
+
   //  TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v3/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/180125_131129/0000/nanoAOD_100.root", "read");
-    TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v4/SingleMuon/Run2016C-07Aug17-v1/180504_150105/0000/nanoAOD_140.root", "read");
+    //TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v4/SingleMuon/Run2016C-07Aug17-v1/180504_150105/0000/nanoAOD_140.root", "read");
     TTree *tree;
     Bool_t isMC = false;
     string temp = "Run";
-    Size_t found = temp.find("Run");
+    Size_t found = temp.find("Run123123");
     if(found == string::npos) isMC = true;
     f->GetObject("Events", tree);
 
@@ -633,7 +651,7 @@ vector<TParticle> h2muAnalyser::MuonSelection()
     mom.SetPtEtaPhiM(Muon_pt[i], Muon_eta[i], Muon_phi[i], Muon_mass[i]);
     mom = mom * roccoR(mom, Muon_charge[i], Muon_genPartIdx[i], Muon_nTrackerLayers[i]);
     
-    if (mom.Pt() < 10) continue;
+    if (mom.Pt() < 20) continue;
     if (fabs(mom.Eta() > 2.4)) continue;
    
     auto muon = TParticle();
@@ -674,11 +692,11 @@ vector<TParticle> h2muAnalyser::ElectronSelection(vector<TParticle> leptons)
 vector<TParticle> h2muAnalyser::JetSelection(vector<TParticle> Muons, vector<TParticle> Elecs)
 {
   vector<TParticle> jets;
+
+  b_btagweightB = 1., btagweightC = 1., btagweightL = 1.;
+
   for (UInt_t i = 0; i < nJet; i++) {
-//    if (fabs(Jet_eta[i]) >= 2.4 &&  Jet_pt[i] < 30) continue;
-//    if (fabs(Jet_eta[i]) < 2.4 &&  Jet_pt[i] < 20) continue;
     if (Jet_pt[i] < 30) continue;
-//    if (fabs(Jet_eta[i]) > 2.4) continue; 
     if (fabs(Jet_eta[i]) > 4.7) continue; 
     if (Jet_jetId[i] < 1) continue;
 
@@ -689,12 +707,46 @@ vector<TParticle> h2muAnalyser::JetSelection(vector<TParticle> Muons, vector<TPa
     if (hasOverLap(mom, Elecs, 0.4)) continue;
     
     auto jet = TParticle();
+    b_Jet_pu.push_back(Jet_puId[i]);
+    b_CSVv2.push_back(Jet_btagCSVV2[i]);
     jet.SetMomentum(mom);
     b_Jet_tlv.push_back(mom);
+    b_Jet->push_back(mom);
     jets.push_back(jet);
 
-    // Jet Pu_ID 
-    b_Jet_pu.push_back(Jet_puId[i]);
+
+    // Btag Weight - test //
+    if(m_isMC){
+       if (Jet_hadronFlavour[i] == 0) {
+          btagweightL = reader.eval_auto_bounds("central", BTagEntry::FLAV_UDSG, fabs(Jet_eta[i]), Jet_pt[i], Jet_btagCSVV2[i]);
+          if (btagweightL != 0) btagweightL *= btagweightL;
+          for (auto key : sysl){ 
+             if (!*sys_l[key]) continue;  
+             *sys_l[key] = reader.eval_auto_bounds(key, BTagEntry::FLAV_UDSG, fabs(Jet_eta[i]), Jet_pt[i], Jet_btagCSVV2[i]);
+             if (*sys_l[key] != 0) *sys_l[key] *= *sys_l[key];  
+          }
+       }
+       if (Jet_hadronFlavour[i] == 4) {
+          btagweightC = reader.eval_auto_bounds("central", BTagEntry::FLAV_C, fabs(Jet_eta[i]), Jet_pt[i], Jet_btagCSVV2[i]);
+          if (btagweightC != 0) btagweightC *= btagweightC;
+          for (auto key : sysc){ 
+             if (!*sys_c[key]) continue;
+             *sys_c[key] = reader.eval_auto_bounds(key, BTagEntry::FLAV_C, fabs(Jet_eta[i]), Jet_pt[i], Jet_btagCSVV2[i]);
+             if (*sys_c[key] != 0) *sys_c[key] *= *sys_c[key];  
+          }
+       }
+       // Iterative Fit // 
+       if (Jet_hadronFlavour[i] == 5) {
+          b_btagweightB = reader.eval_auto_bounds("central", BTagEntry::FLAV_B, fabs(Jet_eta[i]), Jet_pt[i], Jet_btagCSVV2[i]);
+          if (b_btagweightB != 0) b_btagweightB *= b_btagweightB;
+          for (auto key : sysb){ 
+             if (!*sys_b[key]) continue; 
+             *sys_b[key] = reader.eval_auto_bounds(key, BTagEntry::FLAV_B, fabs(Jet_eta[i]), Jet_pt[i], Jet_btagCSVV2[i]);
+             if (*sys_b[key] != 0) *sys_b[key] *= *sys_b[key];  
+          }
+       }
+    }
+    b_btagweight = b_btagweightB * btagweightC * btagweightL; 
   }
   return jets;
 }
@@ -702,12 +754,9 @@ vector<TParticle> h2muAnalyser::JetSelection(vector<TParticle> Muons, vector<TPa
 vector<TParticle> h2muAnalyser::BJetSelection(vector<TParticle> Muons, vector<TParticle> Elecs)
 {
   vector<TParticle> bJets;
-//  b_btagweight = 1.0;
-//  b_btagweight_up = 1.0;
-//  b_btagweight_dn = 1.0;
   for (UInt_t i = 0; i < nJet; i++) {
     if (Jet_btagCSVV2[i] < 0.8484) continue;
-    if (Jet_pt[i] < 20) continue;
+    if (Jet_pt[i] < 30) continue;
     if (fabs(Jet_eta[i]) > 2.4) continue;
     
     TLorentzVector mom;
@@ -719,11 +768,8 @@ vector<TParticle> h2muAnalyser::BJetSelection(vector<TParticle> Muons, vector<TP
     auto bjet = TParticle();
     bjet.SetMomentum(mom);
     b_bJet_tlv.push_back(mom);
+    b_bJet->push_back(mom);
     bJets.push_back(bjet);
-    b_CSVv2.push_back(Jet_btagCSVV2[i]);
-//    b_btagweight *= m_btagSF.eval_auto_bounds("central", BTagEntry::FLAV_B, Jet_eta[i], Jet_pt[i]);
-//    b_btagweight_up *= m_btagSF.eval_auto_bounds("up", BTagEntry::FLAV_B, Jet_eta[i], Jet_pt[i]);
-//    b_btagweight_dn *= m_btagSF.eval_auto_bounds("down", BTagEntry::FLAV_B, Jet_eta[i], Jet_pt[i]);
   }
   return bJets;
 }
@@ -732,8 +778,6 @@ vector<TParticle> h2muAnalyser::nonbJetSelection(vector<TParticle> Muons, vector
 {
   vector<TParticle> nonbjets;
   for (UInt_t i = 0; i < nJet; i++) {
-//    if (fabs(Jet_eta[i]) >= 2.4 &&  Jet_pt[i] < 30) continue;
-//    if (fabs(Jet_eta[i]) < 2.4 &&  Jet_pt[i] < 20) continue;
     if (Jet_pt[i] < 30) continue; 
     if (fabs(Jet_eta[i]) > 4.7) continue; 
     if (Jet_jetId[i] < 1) continue;
@@ -749,6 +793,7 @@ vector<TParticle> h2muAnalyser::nonbJetSelection(vector<TParticle> Muons, vector
     auto jet = TParticle();
     jet.SetMomentum(mom);
     b_nonbJet_tlv.push_back(mom);  
+    b_nonbJet->push_back(mom);
     nonbjets.push_back(jet);
   }
   return nonbjets;

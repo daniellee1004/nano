@@ -43,8 +43,14 @@ public:
   RoccoR* m_rocCor;
   MuonScaleFactorEvaluator m_muonSF;
   ElecScaleFactorEvaluator m_elecSF;
-  BTagCalibrationReader m_btagSF;
+  
+  std::vector<std::string> sys;
+  std::vector<std::string> sysb;
+  std::vector<std::string> sysc;
+  std::vector<std::string> sysl;
 
+  BTagCalibrationReader reader; 
+  
   Bool_t m_isMC;
 };
 
