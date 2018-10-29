@@ -15,93 +15,273 @@ void h2muAnalyser::SetOutput(string outputName)
 {
   m_output = TFile::Open(outputName.c_str(), "recreate");
   // TMVA Booking //
-/*  weightXL = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/newEvent/split/XL_50/weights/TMVAClassification_BDT.weights.xml";
-  weightFH = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/newEvent/split/nFH4_50/weights/TMVAClassification_BDT.weights.xml";
-  weightOut = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/newEvent/split/Out_100/weights/TMVAClassification_BDT.weights.xml";
-  weightnoB = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/newEvent/nonB_120/weights/TMVAClassification_BDT.weights.xml";
+  
+  weightXL = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/all/XL/weights/TMVAClassification_BDTG.weights.xml";
+  weightFH = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/all/nFH/weights/TMVAClassification_BDTG.weights.xml";
+  weightOut = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/all/Out/weights/TMVAClassification_BDTG.weights.xml";
+  weightnoB = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/all/nonB/weights/TMVAClassification_BDTG.weights.xml";
 
   bdt_XL = new TMVA::Reader();
   bdt_XL->AddVariable( "Met", &b_Met );
   bdt_XL->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
   bdt_XL->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
   bdt_XL->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
-  bdt_XL->AddVariable( "all_muDR", &b_all_muDR );
-  bdt_XL->AddVariable( "all_Dilep_Pt", &b_all_Dilep_Pt );
-  bdt_XL->AddVariable( "all_Dilep_Eta", &b_all_Dilep_Eta );
+  bdt_XL->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_XL->AddVariable( "Dilep.Eta()", &b_DilepEta );
   bdt_XL->AddVariable( "nelec", &b_nelec );
   bdt_XL->AddVariable( "nmuon", &b_nmuon );
   bdt_XL->AddVariable( "nnonbjet", &b_nnonbjet );
   bdt_XL->AddVariable( "nbjet", &b_nbjet );
-  bdt_XL->AddVariable( "Central_Jets", &b_Central_Jets );
-  bdt_XL->AddVariable( "Forward_Jets", &b_Forward_Jets );
   bdt_XL->AddVariable( "minDR", &b_minDR );
   bdt_XL->AddVariable( "XlepPt", &b_XlepPt );
-  bdt_XL->AddVariable( "mT2", &b_mT2 );
   bdt_XL->AddVariable( "mT", &b_mT );
-  bdt_XL->AddVariable( "DiJetM12", &b_DiJetM12 );
-  bdt_XL->BookMVA("BDT", weightXL); 
+  bdt_XL->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  bdt_XL->BookMVA("BDTG", weightXL); 
   
   bdt_FH = new TMVA::Reader();
   bdt_FH->AddVariable( "Met", &b_Met );
   bdt_FH->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
   bdt_FH->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
   bdt_FH->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
-  bdt_FH->AddVariable( "all_muDR", &b_all_muDR );
-  bdt_FH->AddVariable( "all_Dilep_Pt", &b_all_Dilep_Pt );
-  bdt_FH->AddVariable( "all_Dilep_Eta", &b_all_Dilep_Eta );
+  bdt_FH->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  //bdt_FH->AddVariable( "Dilep.Eta()", &b_DilepEta );
   bdt_FH->AddVariable( "nnonbjet", &b_nnonbjet );
   bdt_FH->AddVariable( "nbjet", &b_nbjet );
-  bdt_FH->AddVariable( "Central_Jets", &b_Central_Jets );
-  bdt_FH->AddVariable( "Forward_Jets", &b_Forward_Jets );
   bdt_FH->AddVariable( "minDR1", &b_minDR1 );
   bdt_FH->AddVariable( "minDR2", &b_minDR2 );
-  bdt_FH->AddVariable( "mT2", &b_mT2 );
   bdt_FH->AddVariable( "mT", &b_mT );
-  bdt_FH->AddVariable( "DiJetM12", &b_DiJetM12 );
-  bdt_FH->AddVariable( "DiJetM13", &b_DiJetM13 );
-  bdt_FH->AddVariable( "DiJetM14", &b_DiJetM14 );
-  bdt_FH->AddVariable( "DiJetM23", &b_DiJetM23 );
-  bdt_FH->AddVariable( "DiJetM24", &b_DiJetM24 );
-  bdt_FH->AddVariable( "DiJetM34", &b_DiJetM34 );
-  bdt_FH->BookMVA("BDT", weightFH); 
+ // bdt_FH->AddVariable( "DiJetM1.M()", &b_DiJetM12 );
+ // bdt_FH->AddVariable( "DiJetM2.M()", &b_DiJetM13 );
+ // bdt_FH->AddVariable( "DiJetM3.M()", &b_DiJetM14 );
+ // bdt_FH->AddVariable( "DiJetM4.M()", &b_DiJetM23 );
+ // bdt_FH->AddVariable( "DiJetM5.M()", &b_DiJetM24 );
+ // bdt_FH->AddVariable( "DiJetM6.M()", &b_DiJetM34 );
+  bdt_FH->BookMVA("BDTG", weightFH); 
   
   bdt_Out = new TMVA::Reader();
   bdt_Out->AddVariable( "Met", &b_Met );
   bdt_Out->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
   bdt_Out->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
   bdt_Out->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
-  bdt_Out->AddVariable( "all_muDR", &b_all_muDR );
-  bdt_Out->AddVariable( "all_Dilep_Pt", &b_all_Dilep_Pt );
-  bdt_Out->AddVariable( "all_Dilep_Eta", &b_all_Dilep_Eta );
+  bdt_Out->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_Out->AddVariable( "Dilep.Eta()", &b_DilepEta );
   bdt_Out->AddVariable( "nnonbjet", &b_nnonbjet );
   bdt_Out->AddVariable( "nbjet", &b_nbjet );
-  bdt_Out->AddVariable( "Central_Jets", &b_Central_Jets );
-  bdt_Out->AddVariable( "Forward_Jets", &b_Forward_Jets );
-  bdt_Out->AddVariable( "mT2", &b_mT2 );
   bdt_Out->AddVariable( "mT", &b_mT );
-  bdt_Out->AddVariable( "DiJetM12", &b_DiJetM12 );
-  bdt_Out->BookMVA("BDT", weightOut);
+  bdt_Out->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  bdt_Out->AddVariable( "DiJetM1.Pt()", &b_DiJetM1Pt );
+  bdt_Out->AddVariable( "DiJetM1.Eta()", &b_DiJetM1Eta );
+  bdt_Out->BookMVA("BDTG", weightOut);
 
   bdt_noB = new TMVA::Reader();
   bdt_noB->AddVariable( "Met", &b_Met );
-//  bdt_noB->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
-//  bdt_noB->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
-//  bdt_noB->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
-//  bdt_noB->AddVariable( "all_muDR", &b_all_muDR );
-  bdt_noB->AddVariable( "all_Dilep_Pt", &b_all_Dilep_Pt );
-  bdt_noB->AddVariable( "all_Dilep_Eta", &b_all_Dilep_Eta );
- // bdt_noB->AddVariable( "nelec", &b_nelec );
- // bdt_noB->AddVariable( "nexLep", &b_nexLep );
- // bdt_noB->AddVariable( "nmuon", &b_nmuon );
-  bdt_noB->AddVariable( "Central_Jets", &b_Central_Jets );
-  bdt_noB->AddVariable( "Forward_Jets", &b_Forward_Jets );
+  bdt_noB->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_noB->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_noB->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_noB->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_noB->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  //bdt_noB->AddVariable( "nelec", &b_nelec );
+  bdt_noB->AddVariable( "nexLep", &b_nexLep );
+  //bdt_noB->AddVariable( "nmuon", &b_nmuon );
+  //bdt_noB->AddVariable( "njet", &b_njet );
   bdt_noB->AddVariable( "etaJ1", &b_etaJ1 );
   bdt_noB->AddVariable( "etaJ2", &b_etaJ2 );
   bdt_noB->AddVariable( "DijetM1", &b_DijetM1 );
   bdt_noB->AddVariable( "DijetM2", &b_DijetM2 );
   bdt_noB->AddVariable( "DijetEta1", &b_DijetEta1 );
   bdt_noB->AddVariable( "DijetEta2", &b_DijetEta2 );
-  bdt_noB->BookMVA("BDT", weightnoB);
+  bdt_noB->BookMVA("BDTG", weightnoB);
+  
+
+  TTJXL = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/TTBar/XL/weights/TMVAClassification_BDTG.weights.xml";
+  TTZXL = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/TTZ/XL/weights/TMVAClassification_BDTG.weights.xml";
+
+  TTJFH = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/TTBar/nFH/weights/TMVAClassification_BDTG.weights.xml";
+  //TTZFH = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/all/nFH_No/weights/TMVAClassification_BDTG.weights.xml";
+
+  DYOut = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/DYJets/Out/weights/TMVAClassification_BDTG.weights.xml";
+  TTJOut = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/TTBar/Out/weights/TMVAClassification_BDTG.weights.xml";
+  //TTZOut = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/all/Seperate/weights/TMVAClassification_BDTG.weights.xml";
+
+  DYnoB = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/DYJets/nonB/weights/TMVAClassification_BDTG.weights.xml";
+  TTJnoB = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate/TTBar/nonB/weights/TMVAClassification_BDTG.weights.xml";
+  //TTZnoB = std::string(std::getenv("CMSSW_BASE"))+"/src/nano/analysis/test/h2mu/TMVA/Seperate//nonB/weights/TMVAClassification_BDTG.weights.xml";
+
+  bdt_TTJXL = new TMVA::Reader();
+  bdt_TTJXL->AddVariable( "Met", &b_Met );
+  bdt_TTJXL->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTJXL->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTJXL->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTJXL->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTJXL->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTJXL->AddVariable( "nelec", &b_nelec );
+  bdt_TTJXL->AddVariable( "nmuon", &b_nmuon );
+  bdt_TTJXL->AddVariable( "nnonbjet", &b_nnonbjet );
+  bdt_TTJXL->AddVariable( "nbjet", &b_nbjet );
+  //bdt_TTJXL->AddVariable( "njet", &b_nbjet );
+  bdt_TTJXL->AddVariable( "minDR", &b_minDR );
+  bdt_TTJXL->AddVariable( "XlepPt", &b_XlepPt );
+  bdt_TTJXL->AddVariable( "mT", &b_mT );
+  bdt_TTJXL->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  bdt_TTJXL->BookMVA("BDTG", TTJXL); 
+  
+  bdt_TTZXL = new TMVA::Reader();
+  //bdt_TTZXL->AddVariable( "Met", &b_Met );
+  bdt_TTZXL->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  //bdt_TTZXL->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTZXL->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTZXL->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTZXL->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTZXL->AddVariable( "nelec", &b_nelec );
+  bdt_TTZXL->AddVariable( "nmuon", &b_nmuon );
+  //bdt_TTZXL->AddVariable( "nnonbjet", &b_nnonbjet );
+  //bdt_TTZXL->AddVariable( "nbjet", &b_nbjet );
+  bdt_TTZXL->AddVariable( "minDR", &b_minDR );
+  bdt_TTZXL->AddVariable( "XlepPt", &b_XlepPt );
+  bdt_TTZXL->AddVariable( "mT", &b_mT );
+  //bdt_TTZXL->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  bdt_TTZXL->BookMVA("BDTG", TTZXL); 
+  
+  bdt_TTJFH = new TMVA::Reader();
+  bdt_TTJFH->AddVariable( "Met", &b_Met );
+  bdt_TTJFH->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTJFH->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTJFH->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTJFH->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTJFH->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTJFH->AddVariable( "nnonbjet", &b_nnonbjet );
+  //bdt_TTJFH->AddVariable( "nbjet", &b_nbjet );
+  bdt_TTJFH->AddVariable( "minDR1", &b_minDR1 );
+  bdt_TTJFH->AddVariable( "minDR2", &b_minDR2 );
+  bdt_TTJFH->AddVariable( "mT", &b_mT );
+  bdt_TTJFH->AddVariable( "DiJetM1.M()", &b_DiJetM12 );
+  bdt_TTJFH->AddVariable( "DiJetM2.M()", &b_DiJetM13 );
+  bdt_TTJFH->AddVariable( "DiJetM3.M()", &b_DiJetM14 );
+  bdt_TTJFH->AddVariable( "DiJetM4.M()", &b_DiJetM23 );
+  bdt_TTJFH->AddVariable( "DiJetM5.M()", &b_DiJetM24 );
+  bdt_TTJFH->AddVariable( "DiJetM6.M()", &b_DiJetM34 );
+  bdt_TTJFH->BookMVA("BDTG", TTJFH); 
+ /* 
+  bdt_TTZFH = new TMVA::Reader();
+  bdt_TTZFH->AddVariable( "Met", &b_Met );
+  bdt_TTZFH->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTZFH->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTZFH->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTZFH->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTZFH->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTZFH->AddVariable( "nnonbjet", &b_nnonbjet );
+  bdt_TTZFH->AddVariable( "nbjet", &b_nbjet );
+  bdt_TTZFH->AddVariable( "minDR1", &b_minDR1 );
+  bdt_TTZFH->AddVariable( "minDR2", &b_minDR2 );
+  bdt_TTZFH->AddVariable( "mT", &b_mT );
+  bdt_TTZFH->AddVariable( "DiJetM1.M()", &b_DiJetM12 );
+  bdt_TTZFH->AddVariable( "DiJetM2.M()", &b_DiJetM13 );
+  bdt_TTZFH->AddVariable( "DiJetM3.M()", &b_DiJetM14 );
+  bdt_TTZFH->AddVariable( "DiJetM4.M()", &b_DiJetM23 );
+  bdt_TTZFH->AddVariable( "DiJetM5.M()", &b_DiJetM24 );
+  bdt_TTZFH->AddVariable( "DiJetM6.M()", &b_DiJetM34 );
+  bdt_TTZFH->BookMVA("BDT", TTZFH); 
+ */
+  bdt_DYOut = new TMVA::Reader();
+  bdt_DYOut->AddVariable( "Met", &b_Met );
+  bdt_DYOut->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_DYOut->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_DYOut->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_DYOut->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_DYOut->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_DYOut->AddVariable( "nnonbjet", &b_nnonbjet );
+  bdt_DYOut->AddVariable( "nbjet", &b_nbjet );
+  bdt_DYOut->AddVariable( "mT", &b_mT );
+  bdt_DYOut->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  bdt_DYOut->AddVariable( "DiJetM1.Pt()", &b_DiJetM1Pt );
+  bdt_DYOut->AddVariable( "DiJetM1.Eta()", &b_DiJetM1Eta );
+  bdt_DYOut->BookMVA("BDTG", DYOut);
+
+  bdt_TTJOut = new TMVA::Reader();
+  bdt_TTJOut->AddVariable( "Met", &b_Met );
+  bdt_TTJOut->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTJOut->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTJOut->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTJOut->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTJOut->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTJOut->AddVariable( "nnonbjet", &b_nnonbjet );
+  bdt_TTJOut->AddVariable( "nbjet", &b_nbjet );
+  bdt_TTJOut->AddVariable( "mT", &b_mT );
+  //bdt_TTJOut->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  //bdt_TTJOut->AddVariable( "DiJetM1.Pt()", &b_DiJetM1Pt );
+  bdt_TTJOut->BookMVA("BDTG", TTJOut);
+/*
+  bdt_TTZOut = new TMVA::Reader();
+  bdt_TTZOut->AddVariable( "Met", &b_Met );
+  bdt_TTZOut->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTZOut->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTZOut->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTZOut->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTZOut->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTZOut->AddVariable( "nnonbjet", &b_nnonbjet );
+  bdt_TTZOut->AddVariable( "nbjet", &b_nbjet );
+  bdt_TTZOut->AddVariable( "mT", &b_mT );
+  bdt_TTZOut->AddVariable( "DiJetM1.M()", &b_DiJetM1M );
+  bdt_TTZOut->AddVariable( "DiJetM1.Eta()", &b_DiJetM1Eta );
+  bdt_TTZOut->AddVariable( "DiJetM1.Pt()", &b_DiJetM1Pt );
+  bdt_TTZOut->BookMVA("BDT", TTZOut);
+*/
+  bdt_DYnoB = new TMVA::Reader();
+  bdt_DYnoB->AddVariable( "Met", &b_Met );
+  bdt_DYnoB->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_DYnoB->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_DYnoB->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_DYnoB->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_DYnoB->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_DYnoB->AddVariable( "nelec", &b_nelec );
+  bdt_DYnoB->AddVariable( "nexLep", &b_nexLep );
+  bdt_DYnoB->AddVariable( "nmuon", &b_nmuon );
+  bdt_DYnoB->AddVariable( "njet", &b_njet );
+  bdt_DYnoB->AddVariable( "etaJ1", &b_etaJ1 );
+  bdt_DYnoB->AddVariable( "etaJ2", &b_etaJ2 );
+  bdt_DYnoB->AddVariable( "DijetM1", &b_DijetM1 );
+  bdt_DYnoB->AddVariable( "DijetM2", &b_DijetM2 );
+  bdt_DYnoB->AddVariable( "DijetEta1", &b_DijetEta1 );
+  bdt_DYnoB->AddVariable( "DijetEta2", &b_DijetEta2 );
+  bdt_DYnoB->BookMVA("BDTG", DYnoB);
+
+  bdt_TTJnoB = new TMVA::Reader();
+  bdt_TTJnoB->AddVariable( "Met", &b_Met );
+  bdt_TTJnoB->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTJnoB->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTJnoB->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTJnoB->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTJnoB->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  //bdt_TTJnoB->AddVariable( "nelec", &b_nelec );
+  //bdt_TTJnoB->AddVariable( "nexLep", &b_nexLep );
+  //bdt_TTJnoB->AddVariable( "nmuon", &b_nmuon );
+  bdt_TTJnoB->AddVariable( "njet", &b_njet );
+  bdt_TTJnoB->AddVariable( "etaJ1", &b_etaJ1 );
+  bdt_TTJnoB->AddVariable( "etaJ2", &b_etaJ2 );
+  bdt_TTJnoB->AddVariable( "DijetM1", &b_DijetM1 );
+  bdt_TTJnoB->AddVariable( "DijetM2", &b_DijetM2 );
+  bdt_TTJnoB->AddVariable( "DijetEta1", &b_DijetEta1 );
+  bdt_TTJnoB->AddVariable( "DijetEta2", &b_DijetEta2 );
+  bdt_TTJnoB->BookMVA("BDTG", TTJnoB);
+/*
+  bdt_TTZnoB = new TMVA::Reader();
+  bdt_TTZnoB->AddVariable( "Met", &b_Met );
+  bdt_TTZnoB->AddVariable( "all_muEtaDiff", &b_all_muEtaDiff );
+  bdt_TTZnoB->AddVariable( "all_muPtDiff", &b_all_muPhiDiff );
+  bdt_TTZnoB->AddVariable( "all_muPhiDiff", &b_all_muPhiDiff );
+  bdt_TTZnoB->AddVariable( "Dilep.Pt()", &b_DilepPt );
+  bdt_TTZnoB->AddVariable( "Dilep.Eta()", &b_DilepEta );
+  bdt_TTZnoB->AddVariable( "nelec", &b_nelec );
+  bdt_TTZnoB->AddVariable( "nexLep", &b_nexLep );
+  bdt_TTZnoB->AddVariable( "nmuon", &b_nmuon );
+  bdt_TTZnoB->AddVariable( "njet", &b_njet );
+  bdt_TTZnoB->AddVariable( "etaJ1", &b_etaJ1 );
+  bdt_TTZnoB->AddVariable( "etaJ2", &b_etaJ2 );
+  bdt_TTZnoB->AddVariable( "DijetM1", &b_DijetM1 );
+  bdt_TTZnoB->AddVariable( "DijetM2", &b_DijetM2 );
+  bdt_TTZnoB->AddVariable( "DijetEta1", &b_DijetEta1 );
+  bdt_TTZnoB->AddVariable( "DijetEta2", &b_DijetEta2 );
+  bdt_TTZnoB->BookMVA("BDT", TTZnoB);
 */
   m_tree = new TTree("events", "events");
   MakeBranch(m_tree);
@@ -109,12 +289,12 @@ void h2muAnalyser::SetOutput(string outputName)
   h_Event_Tot = new TH1D("Event_total", "Event_total" ,1,0,1);
   h_genweights = new TH1D("genweight", "genweight" , 1,0,1);
   h_weight = new TH1D("weight", "weight", 1,0,1);
+  h_Posweight = new TH1D("Posweight", "Posweight", 1,0,1);
   h_cutFlow = new TH1D("cutflow", "cutflow", 11, -0.5, 10.5);
   h_XL = new TH1D("ExtraLep", "ExtraLep", 1, 0, 1);
   h_nFH4 = new TH1D("FullyHad4", "FullyHad4", 1, 0, 1);
   h_Out = new TH1D("Out", "Out", 1, 0, 1);
   h_Non = new TH1D("Non", "Non", 1, 0, 1);
-
 }
 
 void h2muAnalyser::MakeBranch(TTree* t)
@@ -128,10 +308,16 @@ void h2muAnalyser::MakeBranch(TTree* t)
   t->Branch("lep", "TLorentzVector", &b_lep);
   t->Bronch("bjet", "std::vector<TLorentzVector>", &b_bJet);
   
-  t->Branch("Jet_pu", "std::vector<int>", &b_Jet_pu);
   t->Bronch("Jet", "std::vector<TLorentzVector>", &b_Jet);
   t->Bronch("nonbJet", "std::vector<TLorentzVector>", &b_nonbJet);
- 
+  
+  t->Branch("DiJetM1", &b_DiJetM1);
+  t->Branch("DiJetM2", &b_DiJetM2);
+  t->Branch("DiJetM3", &b_DiJetM3);
+  t->Branch("DiJetM4", &b_DiJetM4);
+  t->Branch("DiJetM5", &b_DiJetM5);
+  t->Branch("DiJetM6", &b_DiJetM6);
+
   t->Branch("Jet_eta1", &b_Jet_eta1, "Jet_eta1/F");
   t->Branch("Jet_eta2", &b_Jet_eta2, "Jet_eta2/F");
   t->Branch("Jet_eta3", &b_Jet_eta3, "Jet_eta3/F");
@@ -156,6 +342,7 @@ void h2muAnalyser::MakeBranch(TTree* t)
   t->Branch("nbjet", &b_nbjet, "nbjet/F");
   
   t->Branch("trig_m", &b_trig_m, "trig_m/O");
+  t->Branch("Met_ori", &b_Met_ori, "Met_ori/F");
   t->Branch("Met", &b_Met, "Met/F");
   t->Branch("Met_phi", &b_Met_phi, "Met_phi/F");
   t->Branch("CSVv2", &b_CSVv2);
@@ -168,14 +355,6 @@ void h2muAnalyser::MakeBranch(TTree* t)
   t->Branch("csvweight", "std::vector<float>", &b_csvweights);
   t->Branch("btagweight", &b_btagweight, "btagweight/F");
   t->Branch("btagweightB", &b_btagweightB, "btagweightB/F");
-  
-  t->Branch("btagweightMu", &b_btagweightMu, "btagweightMu/F");
-  t->Branch("btagweightMu_up", &b_btagweightMu_up, "btagweightMu_up/F");
-  t->Branch("btagweightMu_dn", &b_btagweightMu_dn, "btagweightMu_dn/F");
- 
-  t->Branch("btagweightComb", &b_btagweightComb, "btagweightComb/F");
-  t->Branch("btagweightComb_up", &b_btagweightComb_up, "btagweightComb_up/F");
-  t->Branch("btagweightComb_dn", &b_btagweightComb_dn, "btagweightComb_dn/F");
   
   t->Branch("jes_up", &b_jes_up, "jes_up/F");
   t->Branch("jes_dn", &b_jes_dn, "jes_dn/F");
@@ -207,46 +386,80 @@ void h2muAnalyser::MakeBranch(TTree* t)
   t->Branch("all_muEtaDiff", &b_all_muEtaDiff, "all_muEtaDiff/F");
   t->Branch("all_muPtDiff", &b_all_muPtDiff, "all_muPtDiff/F");
   t->Branch("all_muPhiDiff", &b_all_muPhiDiff, "all_muPhiDiff/F");
-  t->Branch("all_muDR", &b_all_muDR, "all_muDR/F");
-  
-  t->Branch("all_Dilep_Pt", &b_all_Dilep_Pt, "all_Dilep_Pt/F");
-  t->Branch("all_Dilep_Eta", &b_all_Dilep_Eta, "all_Dilep_Eta/F");
-  t->Branch("all_Dilep_Phi", &b_all_Dilep_Phi, "all_Dilep_Phi/F");
   
   t->Branch("DijetM1", &b_DijetM1, "DijetM1/F");
   t->Branch("DijetM2", &b_DijetM2, "DijetM2/F");
   t->Branch("DijetEta1",&b_DijetEta1, "DijetEta1/F");
   t->Branch("DijetEta2",&b_DijetEta2, "DijetEta2/F");
   
-  t->Branch("DiJetM12", &b_DiJetM12, "DiJetM12/F");
-  t->Branch("DiJetM13", &b_DiJetM13, "DiJetM13/F");
-  t->Branch("DiJetM14", &b_DiJetM14, "DiJetM14/F");
-  t->Branch("DiJetM23", &b_DiJetM23, "DiJetM23/F");
-  
-  t->Branch("DiJetM24", &b_DiJetM24, "DiJetM24/F");
-  t->Branch("DiJetM34", &b_DiJetM34, "DiJetM34/F");
   t->Branch("minDR1", &b_minDR1, "minDR1/F");
   t->Branch("minDR2", &b_minDR2, "minDR2/F");
   
   t->Branch("minDR", &b_minDR, "minDR/F");
   t->Branch("XlepPt", &b_XlepPt, "XlepPt/F");
-  t->Branch("mT2", &b_mT2, "mT2/F");
   t->Branch("mT", &b_mT, "mT/F");
+  t->Branch("mT2", &b_mT2, "mT2/F");
   
   t->Branch("nexLep", &b_nexLep, "nexLep/F");
   t->Branch("etaJ1", &b_etaJ1, "etaJ1/F");
   t->Branch("etaJ2", &b_etaJ2, "etaJ2/F");
-  t->Branch("Central_Jets", &b_Central_Jets, "Central_Jets/F");
-  
-  t->Branch("Forward_Jets", &b_Forward_Jets, "Forward_Jets/F");
-  t->Branch("MVA_BDTXL", &b_MVA_BDTXL, "MVA_BDTXL/F");
-  t->Branch("MVA_BDTFH", &b_MVA_BDTFH, "MVA_BDTFH/F");
-  t->Branch("MVA_BDTnoB", &b_MVA_BDTnoB, "MVA_BDTnoB/F");
-  
-  t->Branch("MVA_BDTOut", &b_MVA_BDTOut, "MVA_BDTOut/F");
-  t->Branch("CSV", &b_CSV, "CSV/F");
-}
+  t->Branch("JetEtaDiff", &b_JetEtaDiff, "b_JetEtaDiff/F");
 
+  t->Branch("MVA_BDTXL", &b_MVA_BDTXL, "MVA_BDTXL/F");
+  t->Branch("MVA_TTJXL", &b_MVA_TTJXL, "MVA_TTJXL/F");
+  t->Branch("MVA_TTZXL", &b_MVA_TTZXL, "MVA_TTZXL/F");
+
+  t->Branch("MVA_BDTFH", &b_MVA_BDTFH, "MVA_BDTFH/F");
+  t->Branch("MVA_TTJFH", &b_MVA_TTJFH, "MVA_TTJFH/F");
+  //t->Branch("MVA_TTZFH", &b_MVA_TTZFH, "MVA_TTZFH/F");
+
+  t->Branch("MVA_BDTnoB", &b_MVA_BDTnoB, "MVA_BDTnoB/F");
+  t->Branch("MVA_DYnoB", &b_MVA_DYnoB, "MVA_DYnoB/F");
+  t->Branch("MVA_TTJnoB", &b_MVA_TTJnoB, "MVA_TTJnoB/F");
+  //t->Branch("MVA_TTZnoB", &b_MVA_TTZnoB, "MVA_TTZnoB/F");
+
+  t->Branch("MVA_BDTOut", &b_MVA_BDTOut, "MVA_BDTOut/F");
+  t->Branch("MVA_DYOut", &b_MVA_DYOut, "MVA_DYOut/F");
+  t->Branch("MVA_TTJOut", &b_MVA_TTJOut, "MVA_TTJOut/F");
+  //t->Branch("MVA_TTZOut", &b_MVA_TTZOut, "MVA_TTZOut/F");
+  t->Branch("sigCount", &b_sigCount, "sigCount/I");
+  t->Branch("CSV", &b_CSV, "CSV/F");
+
+  t->Branch("Top1", &b_top1);
+  t->Branch("Top2", &b_top2);
+  t->Branch("Top3", &b_top3);
+  t->Branch("Top4", &b_top4);
+  t->Branch("Top5", &b_top5);
+  t->Branch("Top6", &b_top6);
+
+  t->Branch("Top7", &b_top7);
+  t->Branch("Top8", &b_top8);
+  t->Branch("Top9", &b_top9);
+  t->Branch("Top10", &b_top10);
+  t->Branch("Top11", &b_top11);
+  t->Branch("Top12", &b_top12);
+  
+  t->Branch("m2_Top1", &m2_top1);
+  t->Branch("m2_Top2", &m2_top2);
+  t->Branch("m2_Top3", &m2_top3);
+  t->Branch("m2_Top4", &m2_top4);
+  t->Branch("m2_Top5", &m2_top5);
+  t->Branch("m2_Top6", &m2_top6);
+
+  t->Branch("m2_Top7", &m2_top7);
+  t->Branch("m2_Top8", &m2_top8);
+  t->Branch("m2_Top9", &m2_top9);
+  t->Branch("m2_Top10", &m2_top10);
+  t->Branch("m2_Top11", &m2_top11);
+  t->Branch("m2_Top12", &m2_top12);
+
+  t->Branch("best_m2_top1", &m2_b_top1);
+  t->Branch("best_m2_top2", &m2_b_top2);
+  t->Branch("TopDR", &b_topDR);
+  t->Branch("bjetDR", &b_bjetDR);
+  t->Branch("best_Top1", &b_b_top1);
+  t->Branch("best_Top2", &b_b_top2);
+}
 void h2muAnalyser::ResetBranch()
 { 
   b_Step = 0;
@@ -259,7 +472,38 @@ void h2muAnalyser::ResetBranch()
   b_nonbJet3.SetPtEtaPhiM(0,0,0,0);
   b_nonbJet4.SetPtEtaPhiM(0,0,0,0);
 
-  b_Mu_tlv.clear(); b_El_tlv.clear(); b_Jet_tlv.clear(); b_bJet_tlv.clear();
+  //Top Reco method 1
+  m_Jet1.SetPtEtaPhiM(0,0,0,0); m_Jet2.SetPtEtaPhiM(0,0,0,0); m_Jet3.SetPtEtaPhiM(0,0,0,0); m_Jet4.SetPtEtaPhiM(0,0,0,0);
+
+  b_DiJetM1.SetPtEtaPhiM(0,0,0,0); b_DiJetM2.SetPtEtaPhiM(0,0,0,0); b_DiJetM3.SetPtEtaPhiM(0,0,0,0); 
+  b_DiJetM4.SetPtEtaPhiM(0,0,0,0); b_DiJetM5.SetPtEtaPhiM(0,0,0,0); b_DiJetM6.SetPtEtaPhiM(0,0,0,0);
+
+  b_top1.SetPtEtaPhiM(0,0,0,0); b_top2.SetPtEtaPhiM(0,0,0,0); b_top3.SetPtEtaPhiM(0,0,0,0); b_top4.SetPtEtaPhiM(0,0,0,0);
+  b_top5.SetPtEtaPhiM(0,0,0,0); b_top6.SetPtEtaPhiM(0,0,0,0); b_top7.SetPtEtaPhiM(0,0,0,0); b_top8.SetPtEtaPhiM(0,0,0,0);
+  b_top9.SetPtEtaPhiM(0,0,0,0); b_top10.SetPtEtaPhiM(0,0,0,0); b_top11.SetPtEtaPhiM(0,0,0,0); b_top12.SetPtEtaPhiM(0,0,0,0);
+  
+  //Top Reco method 2  
+  m2_Jet1.SetPtEtaPhiM(0,0,0,0); m2_Jet2.SetPtEtaPhiM(0,0,0,0); m2_Jet3.SetPtEtaPhiM(0,0,0,0); 
+  m2_Jet4.SetPtEtaPhiM(0,0,0,0); m2_Jet5.SetPtEtaPhiM(0,0,0,0); m2_Jet6.SetPtEtaPhiM(0,0,0,0);
+ 
+  m2_DiJetM1.SetPtEtaPhiM(0,0,0,0); m2_DiJetM2.SetPtEtaPhiM(0,0,0,0); m2_DiJetM3.SetPtEtaPhiM(0,0,0,0); 
+  m2_DiJetM4.SetPtEtaPhiM(0,0,0,0); m2_DiJetM5.SetPtEtaPhiM(0,0,0,0); m2_DiJetM6.SetPtEtaPhiM(0,0,0,0);
+  
+  m2_top1.SetPtEtaPhiM(0,0,0,0); m2_top2.SetPtEtaPhiM(0,0,0,0); m2_top3.SetPtEtaPhiM(0,0,0,0); m2_top4.SetPtEtaPhiM(0,0,0,0);
+  m2_top5.SetPtEtaPhiM(0,0,0,0); m2_top6.SetPtEtaPhiM(0,0,0,0); m2_top7.SetPtEtaPhiM(0,0,0,0); m2_top8.SetPtEtaPhiM(0,0,0,0);
+  m2_top9.SetPtEtaPhiM(0,0,0,0); m2_top10.SetPtEtaPhiM(0,0,0,0); m2_top11.SetPtEtaPhiM(0,0,0,0); m2_top12.SetPtEtaPhiM(0,0,0,0);
+  hold_Csv1 = 0; hold_Csv2 = 0;
+  hold_pT3 = 0; hold_pT4 = 0; hold_pT5 = 0; hold_pT6 = 0;
+  //Top Reco Method 3
+  m2_b_top1.SetPtEtaPhiM(0,0,0,0); m2_b_top2.SetPtEtaPhiM(0,0,0,0); b_b_top1.SetPtEtaPhiM(0,0,0,0), b_b_top2.SetPtEtaPhiM(0,0,0,0);
+  m_topM_hold1 = 0; m_topM_hold2 = 0; 
+  TopVector_hold.clear();
+  b_topDR = 0;
+  b_bjetDR = 0;
+  b_JetEtaDiff = 0;
+
+  b_DiJetM1M = 0.; b_DiJetM1Pt = 0.; b_DiJetM1Eta = 0. ;b_DilepPt = 0.; b_DilepEta = 0.;
+  b_Mu_tlv.clear(); b_El_tlv.clear(); b_Jet_tlv.clear(); b_bJet_tlv.clear(); 
   b_bJet->clear(); b_Jet->clear(); b_nonbJet->clear(); 
   b_nonbJet_tlv.clear(); b_Jet_pu.clear();
   b_csvweights.clear(); b_CSVv2.clear();
@@ -274,18 +518,21 @@ void h2muAnalyser::ResetBranch()
   b_hfstats1_up = 1.; b_hfstats1_dn = 1.; b_hfstats2_up = 1.; b_hfstats2_dn = 1.;
   b_lfstats1_up = 1.; b_lfstats1_dn = 1.; b_lfstats2_up = 1.; b_lfstats2_dn = 1.; 
   b_hf_up = 1.; b_hf_dn = 1.; b_cferr1_up = 1.; b_cferr1_dn = 1.; b_cferr2_up = 1.; b_cferr2_dn = 1.;
+  b_Met_ori = 0.; b_Met = 0. ; b_Met_phi = 0.;
+
   // BDT //
   b_all_muEtaDiff = 0; b_all_muPtDiff = 0; b_all_muPhiDiff = 0; b_all_muDR = 0;
-  b_all_Dilep_Pt = 0; b_all_Dilep_Eta = 0; b_all_Dilep_Phi = 0;
   b_Central_Jets = 0; b_Forward_Jets = 0;
   b_DiJetM12 = 0; b_DiJetM13 = 0; b_DiJetM14 = 0; b_DiJetM23 = 0; b_DiJetM24 = 0; b_DiJetM34 = 0;
   b_minDR1 = -2; b_minDR2 = -2;
   b_minDR = -2; b_XlepPt = 0; b_mT2 = -2; b_mT = -2; b_nexLep = 0; b_etaJ1 = -6; b_etaJ2 = -6;
   b_MVA_BDTXL = -999; b_MVA_BDTFH = -999; b_MVA_BDTnoB = -999; b_MVA_BDTOut = -999;
+  b_MVA_TTJXL = -999; b_MVA_TTZXL = -999; b_MVA_TTJFH = -999; b_MVA_DYOut = -999; b_MVA_TTJOut = -999; b_MVA_DYnoB = -999; b_MVA_TTJnoB = -999;
   DR_Hold = 0, DR_Hold2 = 0 ,mT_Hold = 0, MuPT_Hold = 0, ElPT_Hold = 0;
-  b_DijetEta1 = 0, b_DijetEta2 = 0, DijetEta_hold = 0, DijetM_hold = 0, b_DijetM1 = 0, b_DijetM2 = 0;
+  b_DijetEta1 = -10, b_DijetEta2 = -10, DijetEta_hold = 0, DijetM_hold = 0, b_DijetM1 = -10, b_DijetM2 = -10;
   b_CSV = 0;
   b_npvs = 0;
+  b_sigCount = 0;
 }
 
 bool h2muAnalyser::Analysis()
@@ -303,6 +550,7 @@ bool h2muAnalyser::Analysis()
     h_genweights->Fill(0.5, b_genweight);
     b_weight = b_genweight * b_puweight;
     h_weight->Fill(0.5, b_weight);
+    h_Posweight->Fill(0.5, 1);
   } else {
     b_puweight = 1;
     b_genweight = 0;
@@ -318,18 +566,18 @@ bool h2muAnalyser::Analysis()
   h_cutFlow->Fill(2);
   
   b_trig_m = HLT_IsoTkMu24 || HLT_IsoMu24;
-//  if (!(HLT_IsoTkMu24 || HLT_IsoMu24)) return false;
   Bool_t IsoMu24 = false;
-  Bool_t IsoTkMu24 = false;
+ // Bool_t IsoTkMu24 = false;
 
   for (UInt_t i = 0; i < nTrigObj; ++i) {
     if (TrigObj_id[i] != 13) continue; 
     if (TrigObj_pt[i] < 24) continue;
     Int_t bits = TrigObj_filterBits[i];
     if (bits & 0x2) IsoMu24 = true;
-    if (bits & 0x8) IsoTkMu24 = true;  
+   // if (bits & 0x8) IsoTkMu24 = true;  
   }
-  if (!(IsoMu24 || IsoTkMu24)) return false; 
+  //if (!(IsoMu24 || IsoTkMu24)) return true; 
+  if (!IsoMu24) return true; 
   
   b_Step = 3;
   h_cutFlow->Fill(3);
@@ -337,17 +585,17 @@ bool h2muAnalyser::Analysis()
   auto Muons = MuonSelection();
   auto Elecs = ElectronSelection(Muons);
  
-  if (Muons.size() < 2) return false;
-//if (Muons.size() != 2) return false;
+  if (Muons.size() < 2) return true;
   
   TParticle mu1;
   TParticle mu2; 
+  b_Met_ori = MET_pt;
   b_Met = PuppiMET_pt;
   b_Met_phi = PuppiMET_phi;
   b_Step = 4;
   h_cutFlow->Fill(4);
-
-  for (UInt_t i = 0; i < Muons.size(); i++) { 
+  
+  for (UInt_t i = 1; i < Muons.size(); i++) { 
     if ((b_Mu_tlv[0].Pt() > 26) || (b_Mu_tlv[i].Pt() > 26)) { 
       if ((Muons[0].GetPdgCode() * Muons[i].GetPdgCode()) < 0 ) { 
         b_Mu1 = b_Mu_tlv[0];
@@ -355,13 +603,15 @@ bool h2muAnalyser::Analysis()
 
         b_charge = 1;
         mu1 = Muons[0];
-        mu2 = Muons[i];
+        mu2 = Muons[i]; 
+        b_Mu_tlv.erase(b_Mu_tlv.begin()+(i-1));
+        b_Mu_tlv.erase(b_Mu_tlv.begin());
+
         break;
       }
     }
   }
-
-  if (b_charge == 0) return false; 
+  if (b_charge == 0) return true; 
 
   b_nlep = Muons.size() + Elecs.size();
   b_nmuon = Muons.size();
@@ -372,12 +622,11 @@ bool h2muAnalyser::Analysis()
   auto Jets = JetSelection(Muons, Elecs);
   auto BJets = BJetSelection(Muons, Elecs);
   auto nonbJets = nonbJetSelection(Muons, Elecs);
-  
+
   b_njet = Jets.size();
   b_nnonbjet = nonbJets.size();
   b_nbjet = BJets.size();
   b_npvs = PV_npvs;
-
   for (UInt_t i = 0; i < Jets.size(); i++) {
      if (i == 0) {
         b_Jet_eta1 = b_Jet_tlv[i].Eta();
@@ -392,33 +641,37 @@ bool h2muAnalyser::Analysis()
         b_Jet_eta4 = b_Jet_tlv[i].Eta();
         }
   }
-  for (UInt_t i = 0; i < nonbJets.size(); i++) {
-  } 
 
   b_Dilep = b_Mu1 + b_Mu2;
+
+  if (b_Dilep.M() >= 120.0 && b_Dilep.M() <= 130.0) {
+    b_sigCount = 1;
+  }
+  /// BDT Varialbe Set ALL ///
+  b_all_muEtaDiff = fabs(b_Mu1.Eta() - b_Mu2.Eta());
+  b_all_muPtDiff = fabs(b_Mu1.Pt() - b_Mu2.Pt());
+  b_all_muPhiDiff = b_Mu1.DeltaPhi(b_Mu2);
+  b_DilepPt = b_Dilep.Pt();
+  b_DilepEta = b_Dilep.Eta();
+  
   // Extra lep //
-  if (Muons.size() + Elecs.size()  >= 3 && BJets.size() >= 1) {
+  if (Muons.size() + Elecs.size() >= 3 && BJets.size() >= 1) {
      b_XL = 1;
-     h_XL->Fill(0.5, b_XL); 
 
      b_CSV = b_CSVv2[0];
-     if (Muons.size() > 2) {
-       for (UInt_t k=1; k < Muons.size(); k++) {
-         if (b_Mu_tlv[k].Pt() != b_Mu2.Pt()) {
-           if (b_Mu_tlv[k].Pt() > MuPT_Hold) {
-             MuPT_Hold = b_Mu_tlv[k].Pt();
-           }
-           mT_Hold = sqrt(2.0*b_Mu_tlv[k].Pt()*b_Met*(1-cos(fabs(b_Mu_tlv[k].Eta()-b_Met_phi))));
-           if (mT_Hold > b_mT2) {
-              b_mT2 = mT_Hold; 
-           }
+     if (b_Mu_tlv.size() > 0) {
+       MuPT_Hold = b_Mu_tlv[0].Pt();
+       for (UInt_t k=0; k < b_Mu_tlv.size(); k++) {
+         mT_Hold = sqrt(2.0*b_Mu_tlv[k].Pt()*b_Met*(1-cos(DeltaP(b_Mu_tlv[k].Phi(), b_Met_phi))));
+         if (mT_Hold > b_mT2) {
+            b_mT2 = mT_Hold; 
          }
        } 
      }
      if (Elecs.size() > 0) {
        ElPT_Hold = b_El_tlv[0].Pt();
        for (UInt_t k=0; k < Elecs.size(); k++) {
-         mT_Hold = sqrt(2.0*b_El_tlv[k].Pt()*b_Met*(1-cos(fabs(b_El_tlv[k].Eta()-b_Met_phi))));
+         mT_Hold = sqrt(2.0*b_El_tlv[k].Pt()*b_Met*(1-cos(DeltaP(b_El_tlv[k].Phi(), b_Met_phi))));
          if (mT_Hold > b_mT2) {
            b_mT2 = mT_Hold; 
          }
@@ -429,11 +682,9 @@ bool h2muAnalyser::Analysis()
      } else {
        b_XlepPt = MuPT_Hold; 
      }
-
      if (nonbJets.size() >= 2) {
-       nonbJets[0].Momentum(b_nonbJet1); 
-       nonbJets[1].Momentum(b_nonbJet2); 
-       b_DiJetM12 = b_nonbJet1.M() + b_nonbJet2.M();
+       b_DiJetM1 = b_nonbJet_tlv[0] + b_nonbJet_tlv[1];
+       b_DiJetM1M = b_DiJetM1.M();
      }
 
      for (UInt_t i = 0; i < BJets.size(); i++) {
@@ -445,36 +696,198 @@ bool h2muAnalyser::Analysis()
            }
          }
        }
-       if (Muons.size() > 2) {
-         for (UInt_t n = 1; n < Muons.size(); n++) {
-           if (Muons[n].Pt() != b_Mu2.Pt()) {
-             DR_Hold =b_bJet_tlv[i].DeltaR(b_Mu_tlv[n]);
-             if (DR_Hold < b_minDR || b_minDR < 0) {
-               b_minDR = DR_Hold;
-             } 
+       if (b_Mu_tlv.size() > 0) {
+         for (UInt_t n = 0; n < Muons.size(); n++) {
+           DR_Hold =b_bJet_tlv[i].DeltaR(b_Mu_tlv[n]);
+           if (DR_Hold < b_minDR || b_minDR < 0) {
+             b_minDR = DR_Hold;
            }
          }
        }
      }
-     
-     b_mT = sqrt(2.0*b_Mu1.Pt()*b_Met*(1-cos(fabs(b_Mu1.Eta()-b_Met_phi))));
+     mTmu2 = sqrt(2.0*b_Mu2.Pt()*b_Met*(1-cos(DeltaP(b_Mu2.Phi(), b_Met_phi))));
+     mTmu1 = sqrt(2.0*b_Mu1.Pt()*b_Met*(1-cos(DeltaP(b_Mu1.Phi(), b_Met_phi))));
+     mT_Hold = max(mTmu1, mTmu2);
+     b_mT = max(mT_Hold, b_mT2);
+     h_XL->Fill(0.5, b_XL); 
+
+     // BDT Evaluation //
+     b_MVA_BDTXL = bdt_XL->EvaluateMVA("BDTG");
+     b_MVA_TTJXL = bdt_TTJXL->EvaluateMVA("BDTG");
+     b_MVA_TTZXL = bdt_TTZXL->EvaluateMVA("BDTG");
   }
   // Hadronic //
-  if (Elecs.size() == 0 && Muons.size() == 2 && BJets.size() >= 1 && nonbJets.size() >= 4) {
+  if ((Elecs.size() == 0 && Muons.size() == 2 && BJets.size() >= 1 && nonbJets.size() >= 4)) {
      b_nFH4 = 1;
      b_CSV = b_CSVv2[0];
-     nonbJets[0].Momentum(b_nonbJet1); 
-     nonbJets[1].Momentum(b_nonbJet2); 
-     nonbJets[2].Momentum(b_nonbJet3); 
-     nonbJets[3].Momentum(b_nonbJet4); 
      
-     b_DiJetM12 = b_nonbJet1.M() + b_nonbJet2.M();
-     b_DiJetM13 = b_nonbJet1.M() + b_nonbJet3.M();
-     b_DiJetM14 = b_nonbJet1.M() + b_nonbJet4.M();
-     b_DiJetM23 = b_nonbJet2.M() + b_nonbJet3.M();
-     b_DiJetM24 = b_nonbJet2.M() + b_nonbJet4.M();
-     b_DiJetM34 = b_nonbJet3.M() + b_nonbJet4.M();
+     // Method 1
+     b_DiJetM1 = b_nonbJet_tlv[0] + b_nonbJet_tlv[1];
+     b_DiJetM2 = b_nonbJet_tlv[0] + b_nonbJet_tlv[2]; 
+     b_DiJetM3 = b_nonbJet_tlv[0] + b_nonbJet_tlv[3];
+     b_DiJetM4 = b_nonbJet_tlv[1] + b_nonbJet_tlv[2];
+     b_DiJetM5 = b_nonbJet_tlv[1] + b_nonbJet_tlv[3];
+     b_DiJetM6 = b_nonbJet_tlv[2] + b_nonbJet_tlv[3];
      
+     b_DiJetM12 = b_DiJetM1.M(); 
+     b_DiJetM13 = b_DiJetM2.M();
+     b_DiJetM14 = b_DiJetM3.M();
+     b_DiJetM23 = b_DiJetM4.M();
+     b_DiJetM24 = b_DiJetM5.M();
+     b_DiJetM34 = b_DiJetM6.M();
+    
+     if (BJets.size() == 1) { 
+        b_top1 = b_DiJetM1 + b_bJet_tlv[0]; 
+        b_top2 = b_DiJetM2 + b_bJet_tlv[0]; 
+        b_top3 = b_DiJetM3 + b_bJet_tlv[0]; 
+        b_top4 = b_DiJetM4 + b_bJet_tlv[0]; 
+        b_top5 = b_DiJetM5 + b_bJet_tlv[0]; 
+        b_top6 = b_DiJetM6 + b_bJet_tlv[0]; 
+        TopVector_hold.push_back(b_top1);
+        TopVector_hold.push_back(b_top2);
+        TopVector_hold.push_back(b_top3);
+        TopVector_hold.push_back(b_top4);
+        TopVector_hold.push_back(b_top5);
+        TopVector_hold.push_back(b_top6);
+
+        for (UInt_t i = 0; i < TopVector_hold.size(); i++) {
+           if (m_topM_hold1 == 0 || (fabs(m_topM_hold1 - TopM) > fabs(TopVector_hold[i].M() - TopM))) {
+              m_topM_hold1 = TopVector_hold[i].M();
+              b_b_top1 = TopVector_hold[i];
+           }       
+        }
+    }
+     if (BJets.size() == 2) { 
+        b_top1 = b_DiJetM1 + b_bJet_tlv[0]; 
+        b_top2 = b_DiJetM2 + b_bJet_tlv[0]; 
+        b_top3 = b_DiJetM3 + b_bJet_tlv[0]; 
+        b_top4 = b_DiJetM4 + b_bJet_tlv[0]; 
+        b_top5 = b_DiJetM5 + b_bJet_tlv[0]; 
+        b_top6 = b_DiJetM6 + b_bJet_tlv[0]; 
+        b_top7 = b_DiJetM1 + b_bJet_tlv[1]; 
+        b_top8 = b_DiJetM2 + b_bJet_tlv[1]; 
+        b_top9 = b_DiJetM3 + b_bJet_tlv[1]; 
+        b_top10 = b_DiJetM4 + b_bJet_tlv[1]; 
+        b_top11 = b_DiJetM5 + b_bJet_tlv[1]; 
+        b_top12 = b_DiJetM6 + b_bJet_tlv[1]; 
+        TopVector_hold.push_back(b_top1);
+        TopVector_hold.push_back(b_top2);
+        TopVector_hold.push_back(b_top3);
+        TopVector_hold.push_back(b_top4);
+        TopVector_hold.push_back(b_top5);
+        TopVector_hold.push_back(b_top6);
+        TopVector_hold.push_back(b_top7);
+        TopVector_hold.push_back(b_top8);
+        TopVector_hold.push_back(b_top9);
+        TopVector_hold.push_back(b_top10);
+        TopVector_hold.push_back(b_top11);
+        TopVector_hold.push_back(b_top12);
+
+        for (UInt_t i = 0; i < 6; i++) {
+           if (m_topM_hold1 == 0 || (fabs(m_topM_hold1 - TopM) > fabs(TopVector_hold[i].M() - TopM))) {
+              m_topM_hold1 = TopVector_hold[i].M();
+              b_b_top1 = TopVector_hold[i];
+           }       
+        }
+        for (UInt_t i = 6; i < 12; i++) {
+           if (m_topM_hold2 == 0 || (fabs(m_topM_hold2 - TopM) > fabs(TopVector_hold[i].M() - TopM))) {
+              m_topM_hold2 = TopVector_hold[i].M();
+              b_b_top2 = TopVector_hold[i];
+           }       
+        }
+     
+     m_topM_hold2 = 0; m_topM_hold1 = 0; 
+     TopVector_hold.clear();
+
+     }
+     // Method 2 
+     if (Jets.size() >= 6) { 
+        for (UInt_t i = 0; i < Jets.size(); i++) {
+           if (hold_Csv1 < b_CSVv2[i]){
+              hold_Csv1 = b_CSVv2[i];
+              m2_Jet1 = b_Jet_tlv[i];
+           }
+        }
+        for (UInt_t i = 0; i < Jets.size(); i++) {
+           if (hold_Csv2 < b_CSVv2[i] && b_CSVv2[i] != hold_Csv1) { 
+              hold_Csv2 = b_CSVv2[i];
+              m2_Jet2 = b_Jet_tlv[i];
+           }
+        }
+
+        for (UInt_t i = 0; i < Jets.size(); i++) {
+           if (hold_pT3 < b_Jet_tlv[i].Pt() && (b_Jet_tlv[i].Pt() != m2_Jet2.Pt() && b_Jet_tlv[i].Pt() != m2_Jet1.Pt())){
+              hold_pT3 = b_Jet_tlv[i].Pt();
+              m2_Jet3 = b_Jet_tlv[i];
+           }
+        }
+        for (UInt_t i = 0; i < Jets.size(); i++) {
+           if (hold_pT4 < b_Jet_tlv[i].Pt() && (b_Jet_tlv[i].Pt() != hold_pT3)  && (b_Jet_tlv[i].Pt() != m2_Jet2.Pt() && b_Jet_tlv[i].Pt() != m2_Jet1.Pt())){
+              hold_pT4 = b_Jet_tlv[i].Pt();
+              m2_Jet4 = b_Jet_tlv[i];
+           }
+        }
+        for (UInt_t i = 0; i < Jets.size(); i++) {
+           if (hold_pT5 < b_Jet_tlv[i].Pt() && (b_Jet_tlv[i].Pt() != hold_pT4 && b_Jet_tlv[i].Pt() != hold_pT3) && (b_Jet_tlv[i].Pt() != m2_Jet2.Pt() && b_Jet_tlv[i].Pt() != m2_Jet1.Pt())){
+              hold_pT5 = b_Jet_tlv[i].Pt();
+              m2_Jet5 = b_Jet_tlv[i];
+           }
+        }
+        for (UInt_t i = 0; i < Jets.size(); i++) {
+           if (hold_pT6 < b_Jet_tlv[i].Pt() && (b_Jet_tlv[i].Pt() != hold_pT5 && b_Jet_tlv[i].Pt() != hold_pT4 && b_Jet_tlv[i].Pt() != hold_pT3) && (b_Jet_tlv[i].Pt() != m2_Jet2.Pt() && b_Jet_tlv[i].Pt() != m2_Jet1.Pt())){
+              hold_pT6 = b_Jet_tlv[i].Pt();
+              m2_Jet6 = b_Jet_tlv[i];
+           }
+        }
+        b_bjetDR = m2_Jet1.DeltaR(m2_Jet2);
+        // Combination for W Jet 
+        m2_DiJetM1 = m2_Jet3 + m2_Jet4; 
+        m2_DiJetM2 = m2_Jet3 + m2_Jet5; 
+        m2_DiJetM3 = m2_Jet3 + m2_Jet6; 
+        m2_DiJetM4 = m2_Jet4 + m2_Jet5; 
+        m2_DiJetM5 = m2_Jet4 + m2_Jet6; 
+        m2_DiJetM6 = m2_Jet5 + m2_Jet6; 
+        // Combination for Top 
+        m2_top1 = m2_DiJetM1 + m2_Jet1; 
+        m2_top2 = m2_DiJetM2 + m2_Jet1; 
+        m2_top3 = m2_DiJetM3 + m2_Jet1; 
+        m2_top4 = m2_DiJetM4 + m2_Jet1; 
+        m2_top5 = m2_DiJetM5 + m2_Jet1; 
+        m2_top6 = m2_DiJetM6 + m2_Jet1; 
+        m2_top7 = m2_DiJetM1 + m2_Jet2; 
+        m2_top8 = m2_DiJetM2 + m2_Jet2; 
+        m2_top9 = m2_DiJetM3 + m2_Jet2; 
+        m2_top10 = m2_DiJetM4 + m2_Jet2; 
+        m2_top11 = m2_DiJetM5 + m2_Jet2; 
+        m2_top12 = m2_DiJetM6 + m2_Jet2;
+        
+        TopVector_hold.push_back(m2_top1);
+        TopVector_hold.push_back(m2_top2);
+        TopVector_hold.push_back(m2_top3);
+        TopVector_hold.push_back(m2_top4);
+        TopVector_hold.push_back(m2_top5);
+        TopVector_hold.push_back(m2_top6);
+        TopVector_hold.push_back(m2_top7);
+        TopVector_hold.push_back(m2_top8);
+        TopVector_hold.push_back(m2_top9);
+        TopVector_hold.push_back(m2_top10);
+        TopVector_hold.push_back(m2_top11);
+        TopVector_hold.push_back(m2_top12);
+
+        for (UInt_t i = 0; i < 6; i++) {
+           if (m_topM_hold1 == 0 ||(fabs(m_topM_hold1 - TopM) > fabs(TopVector_hold[i].M() - TopM))) {
+              m_topM_hold1 = TopVector_hold[i].M();
+              m2_b_top1 = TopVector_hold[i];
+           }       
+        }
+        for (UInt_t i = 6; i < 12; i++) {
+           if (m_topM_hold2 ==0 || (fabs(m_topM_hold2 - TopM) > fabs(TopVector_hold[i].M() - TopM))) {
+              m_topM_hold2 = TopVector_hold[i].M();
+              m2_b_top2 = TopVector_hold[i];
+           }       
+        }
+     }
+     b_topDR = m2_b_top1.DeltaR(m2_b_top2);
      for (UInt_t i = 0; i < BJets.size(); i++) {
        DR_Hold = b_bJet_tlv[i].DeltaR(b_Mu1);
        DR_Hold2 =b_bJet_tlv[i].DeltaR(b_Mu2);
@@ -486,26 +899,37 @@ bool h2muAnalyser::Analysis()
        }
      }
      
-     b_mT2 = sqrt(2.0*b_Mu1.Pt()*b_Met*(1-cos(fabs(b_Mu1.Eta()-b_Met_phi))));
-     b_mT = sqrt(2.0*b_Mu2.Pt()*b_Met*(1-cos(fabs(b_Mu2.Eta()-b_Met_phi))));
+     mTmu1 = sqrt(2.0*b_Mu1.Pt()*b_Met*(1-cos(DeltaP(b_Mu1.Phi(), b_Met_phi))));
+     mTmu2 = sqrt(2.0*b_Mu2.Pt()*b_Met*(1-cos(DeltaP(b_Mu2.Phi(), b_Met_phi))));
+     b_mT = max(mTmu1, mTmu2);
      h_nFH4->Fill(0.5, b_nFH4); 
+     // BDT Evaluation //
+     b_MVA_BDTFH = bdt_FH->EvaluateMVA("BDTG");
+     b_MVA_TTJFH = bdt_TTJFH->EvaluateMVA("BDTG");
   }
   //Outsider //
   if (BJets.size() >= 1 && b_nFH4 == 0 && b_XL == 0) {
      b_Out = 1;
      b_CSV = b_CSVv2[0];
      if (nonbJets.size() >= 2) {
-     nonbJets[0].Momentum(b_nonbJet1);
-     nonbJets[1].Momentum(b_nonbJet2);
-     
-     b_DiJetM12 = b_nonbJet1.M() + b_nonbJet2.M();
+        b_JetEtaDiff = fabs(b_nonbJet_tlv[0].Eta() - b_nonbJet_tlv[1].Eta());  
+        b_DiJetM1 = b_nonbJet_tlv[0] + b_nonbJet_tlv[1];
+        b_DiJetM1M = b_DiJetM1.M();
+        b_DiJetM1Eta = b_DiJetM1.Eta();
+        b_DiJetM1Pt = b_DiJetM1.Pt();
      }     
 
-     b_mT2 = sqrt(2.0*b_Mu1.Pt()*b_Met*(1-cos(fabs(b_Mu1.Eta()-b_Met_phi))));
-     b_mT = sqrt(2.0*b_Mu2.Pt()*b_Met*(1-cos(fabs(b_Mu2.Eta()-b_Met_phi))));
+     mTmu1 = sqrt(2.0*b_Mu1.Pt()*b_Met*(1-cos(DeltaP(b_Mu1.Phi(), b_Met_phi))));
+     mTmu2 = sqrt(2.0*b_Mu2.Pt()*b_Met*(1-cos(DeltaP(b_Mu2.Phi(), b_Met_phi))));
+     b_mT = max(mTmu1, mTmu2);
      
      h_Out->Fill(0.5,b_Out);
+     // BDT Evaluation //
+     b_MVA_BDTOut = bdt_Out->EvaluateMVA("BDTG");
+     b_MVA_DYOut = bdt_DYOut->EvaluateMVA("BDTG");
+     b_MVA_TTJOut = bdt_TTJOut->EvaluateMVA("BDTG");
   }
+
   // nob // 
   if (BJets.size() == 0) {
      b_nonB = 1;
@@ -515,6 +939,7 @@ bool h2muAnalyser::Analysis()
        TLorentzVector j2; 
        b_etaJ1 = b_Jet_tlv[0].Eta();
        b_etaJ2 = b_Jet_tlv[1].Eta();
+
        for (auto& J1 : b_Jet_tlv) {
          for (auto& J2 : b_Jet_tlv) {
            if (J1.M() != J2.M()) { 
@@ -530,6 +955,7 @@ bool h2muAnalyser::Analysis()
                DijetM_hold = b_DijetM1;
                DijetEta_hold = b_DijetEta1;
 
+        
                b_DijetM1 = b_DijetM2;
                b_DijetEta1 = b_DijetEta2;
 
@@ -541,36 +967,26 @@ bool h2muAnalyser::Analysis()
       }    
     }
     h_Non->Fill(0.5, b_nonB);
+    // BDT Evaluation //
+    b_MVA_BDTnoB = bdt_noB->EvaluateMVA("BDTG");
+    b_MVA_DYnoB = bdt_DYnoB->EvaluateMVA("BDTG");
+    b_MVA_TTJnoB = bdt_TTJnoB->EvaluateMVA("BDTG");
   }
 
   ////////// BDT //////////////////////////////
-  /// BDT Varialbe Set ALL ///
-  b_all_muEtaDiff = fabs(b_Mu1.Eta() - b_Mu2.Eta());
-  b_all_muPtDiff = fabs(b_Mu1.Pt() - b_Mu2.Pt());
-  //b_all_muPhiDiff = fabs(b_Mu1.Phi() - b_Mu2.Phi());
-  b_all_muPhiDiff = b_Mu1.DeltaPhi(b_Mu2);
-  b_all_muDR = b_Mu1.DeltaR(b_Mu2);
-  b_all_Dilep_Pt = b_Dilep.Pt();   
-  b_all_Dilep_Eta = b_Dilep.Eta();   
-  b_all_Dilep_Phi = b_Dilep.Phi();   
-
-  for (auto& J : Jets) {
-    if (fabs(J.Eta()) < 2.4) {
-       b_Central_Jets += 1;   
-    } else {
-       b_Forward_Jets += 1; 
-    }
-  }
   b_mueffweight = m_muonSF.getScaleFactor(mu1, 13, 0)*m_muonSF.getScaleFactor(mu2, 13, 0);
   b_mueffweight_up = m_muonSF.getScaleFactor(mu1, 13, +1)*m_muonSF.getScaleFactor(mu2, 13, +1);
   b_mueffweight_dn = m_muonSF.getScaleFactor(mu1, 13, -1)*m_muonSF.getScaleFactor(mu2, 13, -1);
 
+  //b_weight = b_weight*b_mueffweight*b_btagweight;
   b_Event_No = 1;
- /* b_MVA_BDTXL = bdt_XL->EvaluateMVA("BDT");
-  b_MVA_BDTFH = bdt_FH->EvaluateMVA("BDT");
-  b_MVA_BDTnoB = bdt_noB->EvaluateMVA("BDT");
-  b_MVA_BDTOut = bdt_Out->EvaluateMVA("BDT");
-*/
+  /*
+  b_MVA_BDTXL = bdt_XL->EvaluateMVA("BDTG");
+  b_MVA_BDTFH = bdt_FH->EvaluateMVA("BDTG");
+  b_MVA_BDTnoB = bdt_noB->EvaluateMVA("BDTG");
+  b_MVA_BDTOut = bdt_Out->EvaluateMVA("BDTG");
+  */
+
   return true;
 }
 
@@ -598,12 +1014,12 @@ int main(Int_t argc, Char_t** argv)
 
   if (argc != 1) {
     string dirName = "root://cms-xrdr.sdfarm.kr:1094///xrd/store/user/"+username+"/nanoAOD/"+std::string(argv[1])+"/"+std::string(argv[2]);
-   // string dirName = env+("/src/nano/analysis/test/h2mu/Results/")+argv[1]+"/"+argv[2];
     string temp = argv[2];
     Bool_t isMC = false;
     Size_t found = temp.find("Run");
     if(found == string::npos) isMC = true;
     for (Int_t i = 3; i < argc; i++) {
+      cerr << argv[i] << endl;
       TFile *f = TFile::Open(argv[i], "read");
 
       TTree *tree;
@@ -617,9 +1033,12 @@ int main(Int_t argc, Char_t** argv)
       t.Loop();
     }
   } else {
-    TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v5/ttHToMuMu_M125_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6/180611_131219/0000/nanoAOD_112.root", "read");
+    //TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v5/TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext1-v1/180611_081410/0000/nanoAOD_122.root", "read");
 
   //  TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v3/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/180125_131129/0000/nanoAOD_100.root", "read");
+    //TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v5/ttHToMuMu_M125_13TeV-powheg-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6/180611_131219/0000/nanoAOD_100.root", "read");
+    TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v5/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8/RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6_ext2-v1/180607_115426/0000/nanoAOD_440.root", "read");
+
     //TFile *f = TFile::Open("/xrootd/store/group/nanoAOD/run2_2016v4/SingleMuon/Run2016C-07Aug17-v1/180504_150105/0000/nanoAOD_140.root", "read");
     TTree *tree;
     Bool_t isMC = false;
@@ -697,9 +1116,9 @@ vector<TParticle> h2muAnalyser::JetSelection(vector<TParticle> Muons, vector<TPa
 
   for (UInt_t i = 0; i < nJet; i++) {
     if (Jet_pt[i] < 30) continue;
-    if (fabs(Jet_eta[i]) > 4.7) continue; 
+    if (fabs(Jet_eta[i]) > 2.4) continue; 
     if (Jet_jetId[i] < 1) continue;
-
+    if (Jet_puId[i] != 7) continue; 
     TLorentzVector mom;
     mom.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
     
@@ -707,7 +1126,6 @@ vector<TParticle> h2muAnalyser::JetSelection(vector<TParticle> Muons, vector<TPa
     if (hasOverLap(mom, Elecs, 0.4)) continue;
     
     auto jet = TParticle();
-    b_Jet_pu.push_back(Jet_puId[i]);
     b_CSVv2.push_back(Jet_btagCSVV2[i]);
     jet.SetMomentum(mom);
     b_Jet_tlv.push_back(mom);
@@ -755,9 +1173,10 @@ vector<TParticle> h2muAnalyser::BJetSelection(vector<TParticle> Muons, vector<TP
 {
   vector<TParticle> bJets;
   for (UInt_t i = 0; i < nJet; i++) {
-    if (Jet_btagCSVV2[i] < 0.8484) continue;
+    if (Jet_btagCSVV2[i] <= 0.8484) continue;
     if (Jet_pt[i] < 30) continue;
     if (fabs(Jet_eta[i]) > 2.4) continue;
+    if (Jet_puId[i] != 7) continue; 
     
     TLorentzVector mom;
     mom.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
@@ -779,10 +1198,11 @@ vector<TParticle> h2muAnalyser::nonbJetSelection(vector<TParticle> Muons, vector
   vector<TParticle> nonbjets;
   for (UInt_t i = 0; i < nJet; i++) {
     if (Jet_pt[i] < 30) continue; 
-    if (fabs(Jet_eta[i]) > 4.7) continue; 
+    if (fabs(Jet_eta[i]) > 2.4) continue; 
     if (Jet_jetId[i] < 1) continue;
+    if (Jet_puId[i] != 7) continue; 
 
-    if (Jet_btagCSVV2[i] > 0.8484 && Jet_pt[i] > 20 && fabs(Jet_eta[i] < 2.4)) continue;
+    if (Jet_btagCSVV2[i] > 0.8484) continue;
 
     TLorentzVector mom;
     mom.SetPtEtaPhiM(Jet_pt[i], Jet_eta[i], Jet_phi[i], Jet_mass[i]);
@@ -825,3 +1245,15 @@ Double_t h2muAnalyser::roccoR(TLorentzVector m, int &q, int &nGen, int &nTracker
 	        			     nTrackerLayers, u1, u2, 0, 0);
   }
 }
+Double_t h2muAnalyser::DeltaP(double m1, float m2)
+{  
+   dphi = m1 - m2;
+   if (dphi > M_PI) {
+      dphi -= 2.0*M_PI;
+   } else {
+      dphi += 2.0*M_PI; 
+   }
+   return dphi;
+}
+
+

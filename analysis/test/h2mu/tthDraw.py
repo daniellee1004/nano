@@ -28,8 +28,8 @@ version = os.environ['CMSSW_VERSION']
 user = os.environ['USER']
 
 
-rootfileDir = "/xrootd/store/user/{}/nanoAOD/v5_Pu/results_merged/tth2mu_".format(user)
-#rootfileDir = "%s/src/nano/analysis/topMass/Results/results_merged/topmass_"% os.environ['CMSSW_BASE']
+#rootfileDir = "/xrootd/store/user/{}/nanoAOD/v5_BDT_noExtraSig/results_merged/tth2mu_".format(user)
+rootfileDir = "/xrootd/store/user/{}/nanoAOD/v5_SepBDT/results_merged/tth2mu_".format(user)
 #rootfileDir = "/xrootd/store/user/pseudotop/ntuples/results_merged/v7-6-3/h2muAnalyzer_"
 #rootfileDir = "%s/src/CATTools/CatAnalyzer/test/results_merged/h2muAnalyzer_" % os.environ['CMSSW_BASE']
 #rootfileDir = "%s/cattuples/20160324_163101/results_merged/h2muAnalyzer_" % os.environ['HOME_SCRATCH']
@@ -73,11 +73,11 @@ mcfilelist = [
                'TTWJetsToLNu', 
                "SingleTop_tW",
                "SingleTbar_tW",
-               "TTJets_DiLept",
-             # "TTJets_DiLept_Tune4",
-             # 'TT_powheg',
-             #  "DYToLL_2J",
-               'DYJets',
+              "TTJets_DiLept",
+            # "TTJets_DiLept_Tune4",
+            # 'TT_powheg',
+            #   "DYToLL_2J",
+              'DYJets',
              # 'DYJets_MG_10to50',
              # 'DYJets_MG2',
              # 'DYJets_2J',
@@ -98,7 +98,7 @@ rdfilelist = [
 datasets = json.load(open("%s/src/nano/nanoAOD/data/dataset_2016v4/dataset.json" % os.environ['CMSSW_BASE']))
 #cut_step = "(step>=5)"
 #cut = 'Dilep.M()>=120&&Dilep.M()<=130&&nonB==1'
-cut = 'Dilep.M()>=60'
+cut = 'Dilep.M()>=120&&Dilep.M()<=130&&nonB==1'
 #cut = 'filtered==1&&%s&&%s'%(cut_step,emu_pid)
 #cut = 'channel==2'
 print cut
@@ -108,14 +108,14 @@ print cut
 weight = 'genweight*puweight*mueffweight*btagweight'
 #weight = 'weight'
 #plotvar = 'njet'
-plotvar = 'Dilep.M()'
-binning = [50, -0.3, 0.3]#[150, 50, 200]
+BDT_var = ['MVA_BDTXL', 'MVA_BDTFH', 'MVA_BDTnoB', 'MVA_BDTOut']
+plotvar = BDT_var[2]
+binning = [20, -1, 1]#[150, 50, 200]
 #binning = [50, 0, 1]#[150, 50, 200]
 #x_name = 'Invariant Mass[GeV]'
 x_name = 'mass'
 y_name = 'Events'
-dolog = True
-f_name = 'Dlep'
+f_name = 'nonB_BDToutput_OLD'
 try:
     opts, args = getopt.getopt(sys.argv[1:],"hdc:w:b:p:x:y:f:j:",["cut","weight","binning","plotvar","x_name","y_name","f_name","json_used","dolog"])
 except getopt.GetoptError:          
@@ -142,7 +142,7 @@ for opt, arg in opts:
     elif opt in ("-j", "--json_used"):
         json_used = arg
     elif opt in ("-d", "--dolog"):
-        dolog = True
+        dolog = arg
 print plotvar,      x_name,      f_name
 
 for a in ("B", "C", "D", "E", "F", "G", "H"):
@@ -157,7 +157,6 @@ tname = "events"
 
 mchistList = []
 
-dolog = True
 tcut = '(%s)*%s'%(cut,weight)
 #tcut = '(%s)'%(cut)
 rdfname = rootfileDir + rdfilelist[0] +".root"
@@ -167,10 +166,13 @@ bg=[0,0,0,0,0,0]
 lumilist= [datalumi,300*1000,900*1000,3000*1000] 
 """
 
-sysNameList = ["mueffweight", "puweight"] 
+sysNameList = ["mueffweight", "puweight"]
+#sysNameList = ["jes", "hfstats1", "hfstats2", "lf", "hf", "cefrr1", "cefrr2", 'lfstats1', "lfstats2" ]
+#sysNameList = ["mueffweight", "puweight", "jes", "hfstats1", "hfstats2", "lf", "hf", "cefrr1", "cefrr2", 'lfstats1', "lfstats2" ]
 sysErr_up = []
 sysErr_dn = []
-staNameList = ["Lumi"]
+#staNameList = ["Lumi"]
+staNameList = []
 staErr = []
 
 for sysname in sysNameList:
@@ -188,6 +190,8 @@ SingleTop = 0
 SingleTbar = 0 
 TTH = 0
 cout = 0 
+DYJets = 0
+tzq = 0
 #if plotvar == 'Dilep.M()':
 #    f2_txt = open("significance_%s.txt"%(f_name),"w")
 for imc,mcname in enumerate(mcfilelist):
@@ -212,9 +216,8 @@ for imc,mcname in enumerate(mcfilelist):
     mchist = makeTH1(rfname, tname, title, binning, plotvar, tcut, scale)    
    
     for i, sysname in enumerate(sysNameList):
-      if "weight" in sysname:
-         sysErr_up[i].Add(makeTH1(rfname, tname, title, binning, plotvar, tcut.replace(sysname,sysname+'_up'), scale))
-         sysErr_dn[i].Add(makeTH1(rfname, tname, title, binning, plotvar, tcut.replace(sysname,sysname+'_dn'), scale))
+      sysErr_up[i].Add(makeTH1(rfname, tname, title, binning, plotvar, tcut.replace(sysname,sysname+'_up'), scale))
+      sysErr_dn[i].Add(makeTH1(rfname, tname, title, binning, plotvar, tcut.replace(sysname,sysname+'_dn'), scale))
     for i, staname in enumerate(staNameList):
          newscale = scale + (((datalumi*0.025)*data["xsec"])/wentries)
          staErr[i].Add(makeTH1(rfname, tname, title, binning, plotvar, tcut, newscale))
@@ -222,33 +225,41 @@ for imc,mcname in enumerate(mcfilelist):
     mchist.SetFillColor(colour)
     mchist.SetLineColor(colour)
 
-    remchist = makeTH1(rfname, tname, title, binning, plotvar, tcut, scale)
-    if any(a in mcname for a in ("ttH", "HToMuMu")):
-      sig += remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
-    else: 
-      bg += remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+    remchist = makeTH1(rfname, tname, title, [1,1,2], "sigCount", tcut, scale)
+    integral = remchist.GetBinContent(1)
+    print "Integral = %s" %integral
+    if "ttH" in mcname:
+      sig += integral
+    elif "HToMuMu" not in mcname: 
+      bg += integral 
       cout += 1
       print mcname
+    if "DYJets" in mcname:  
+      DYJets = integral
     if "ttH" in mcname:  
-      TTH = remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+      TTH = integral
     if 'TTWJetsToLNu' in mcname:  
-      TTW = remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+      TTW = integral
     if 'TTZToLLNuNu' in mcname:
-      TTZ = remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+      TTZ = integral
     if "TTJets" in mcname:
-      TTJets = remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+      TTJets = integral
+    if "tZq" in mcname:
+      tzq = integral
     if "SingleTop_tW" in mcname:
-      SingleTop = remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+      SingleTop = integral
     if "SingleTbar_tW" in mcname:
-      SingleTbar = remchist.Integral(remchist.FindBin(120), remchist.FindBin(130))
+      SingleTbar = integral
 
     mchistList.append(mchist)
 
 if "Dilep.M()" in plotvar:
+   print "DYJet        = {}".format(DYJets)          
    print "TTH          = {}".format(TTH)          
    print "TTW          = {}".format(TTW)          
    print "TTZ          = {}".format(TTZ)          
    print "TTJet        = {}".format(TTJets)          
+   print "tZq        = {}".format(tzq)          
    print "SingleTop    = {}".format(SingleTop)          
    print "SingleTbar   = {}".format(SingleTbar)          
    print "signal       = {}".format(sig) 
@@ -260,9 +271,10 @@ if plotvar == "Dilep.M()": cut = cut+'&&(Dilep.M()<120||Dilep.M()>130)'
 print "rdfname: %s\n tname: %s\n binning: %s\n plotvar: %s\n cut: %s\n"%(rdfname, tname, binning, plotvar, cut)
 rdhist = makeTH1(rdfname, tname, 'data', binning, plotvar, cut)
 nbins = rdhist.GetNbinsX()
+dolog = True
 if dolog == True: 
    minp = 0.005
-   maxp = 1000000000
+   maxp = 10000000
    if "FL" in f_name:
       maxp = 100
       minp = 0.0005
@@ -271,6 +283,9 @@ if dolog == True:
       minp = 0.005
    if "XL" in f_name:
       maxp = 1000000
+      minp = 0.005
+   if "Top" in f_name:
+      maxp = 1000
       minp = 0.005
    rdhist.SetMinimum(minp)  
    rdhist.SetMaximum(maxp)
